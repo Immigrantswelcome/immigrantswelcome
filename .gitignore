@@ -1,0 +1,8 @@
+*.bak
+*.dump
+.DS_Store
+*.orig
+*.rej
+*~
+*.log
+node_modules
