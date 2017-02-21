@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block no_meta_title %}{% endblock %}
+{% block meta_description %}{{ page.meta_description }}{% endblock %}
+{% block meta_keywords %}{{ page.meta_keywords }}{% endblock %}
+
+{% block body_class %}home-page{% endblock %}
+
+{% block content %}
+    {% for logo in logos() %}
+        <img src="{% static logo.url %}" alt="{{ logo.alt }}" />
+    {% endfor %}
+{% endblock %}

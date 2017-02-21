@@ -5,4 +5,5 @@
 *.rej
 *~
 *.log
+/dist
 node_modules

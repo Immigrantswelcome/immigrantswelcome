@@ -1,0 +1,24 @@
+{
+  "name": "fftf-immigration-stories",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "./scripts/build",
+    "icons": "./scripts/build_icons",
+    "prefix": "./scripts/prefix_css",
+    "watch": "./scripts/watch"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "autoprefixer": "^6.6.1",
+    "browser-sync": "^2.15.0",
+    "chokidar-cli": "^1.2.0",
+    "postcss-cli": "^2.6.0",
+    "svg-sprite": "^1.3.6",
+    "cssnano": "^3.10.0",
+    "globby": "^6.1.0",
+    "nunjucks": "^3.0.0",
+    "uglify-js": "^2.7.5",
+    "js-yaml": "^3.8.1"
+  }
+}

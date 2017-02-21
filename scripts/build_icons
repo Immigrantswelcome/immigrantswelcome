@@ -1,0 +1,3 @@
+#!/bin/bash
+
+svg-sprite --symbol --symbol-dest='.' --symbol-sprite='sprite.svg' --dest='dist/static/icon_sprite' 'src/icons/*.svg'

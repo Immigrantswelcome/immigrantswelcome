@@ -1,0 +1,123 @@
+.richtext p,
+.richtext img,
+.richtext hr,
+.richtext blockquote,
+.richtext h1,
+.richtext h2,
+.richtext h3,
+.richtext h4,
+.richtext h5,
+.richtext h6,
+.richtext ul,
+.richtext ol,
+.richtext pre,
+.richtext table {
+    margin-bottom: 24px;
+}
+
+.richtext img {
+    max-width: 100%;
+    display: block;
+}
+
+.richtext ul,
+.richtext ol {
+    margin-left: 50px;
+}
+
+.richtext ul {
+    list-style-type: disc;
+}
+
+.richtext hr {
+    border: none;
+    border-top: 1px solid #CCC;
+}
+
+.richtext a {
+    color: #FFBC2B;
+}
+
+.richtext blockquote {
+    font-style: italic;
+    margin-left: 40px;
+    margin-right: 40px;
+}
+
+.richtext h1 {
+    color: #333;
+    font-size: 38px;
+    line-height: 44px;
+    margin-top: 45px;
+    margin-bottom: 16px;
+}
+
+.richtext h2 {
+    color: #333;
+    font-size: 28px;
+    line-height: 36px;
+    margin-top: 40px;
+    margin-bottom: 14px;
+}
+
+.richtext h3,
+.richtext h4,
+.richtext h5,
+.richtext h6 {
+    color: #333;
+    font-size: 20px;
+    line-height: 28px;
+    margin-top: 36px;
+    margin-bottom: 10px;
+}
+
+.richtext pre {
+    font-size: 14px;
+    line-height: 1.5;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    padding-right: 0;
+    background-color: #F5F5F5;
+}
+
+.richtext p code,
+.richtext h1 code,
+.richtext h2 code,
+.richtext h3 code,
+.richtext h4 code,
+.richtext h5 code,
+.richtext h6 code {
+    background-color: #F2F2F2;
+    padding: 0.1em 0.3em;
+    border-radius: 0;
+}
+
+.richtext p code {
+    font-size: 16px;
+}
+
+.richtext h1:first-child,
+.richtext h2:first-child,
+.richtext h3:first-child,
+.richtext h4:first-child,
+.richtext h5:first-child,
+.richtext h6:first-child {
+    margin-top: 0;
+}
+
+.richtext p:last-child,
+.richtext img:last-child,
+.richtext hr:last-child,
+.richtext blockquote:last-child,
+.richtext h1:last-child,
+.richtext h2:last-child,
+.richtext h3:last-child,
+.richtext h4:last-child,
+.richtext h5:last-child,
+.richtext h6:last-child,
+.richtext ul:last-child,
+.richtext ol:last-child,
+.richtext pre:last-child,
+.richtext table:last-child {
+    margin-bottom: 0;
+}
