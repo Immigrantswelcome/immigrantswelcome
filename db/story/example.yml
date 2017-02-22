@@ -1,0 +1,32 @@
+# filename MUST be a number not used i.e. 1.yml, 2.yml, 3.yml
+image: images/story/image1.jpg
+title: Title
+name: Miguel Martinez
+from: Mexico
+immigratedIn: 2011
+text: >
+    Mauris non tempor quam, et lacinia sapien. Mauris accumsan eros eget libero posuere
+    vulputate. Etiam elit elit, elementum sed varius at, adipiscing vitae est. Sed nec felis
+    pellentesque, lacinia dui sed, ultricies sapien. Pellentesque orci lectus, consectetur vel
+    posuere posuere, rutrum eu ipsum. Aliquam eget odio sed ligula iaculis consequat at eget
+    orci. Mauris molestie sit amet metus mattis varius. Donec sit amet ligula eget nisi sodales
+    egestas. Aliquam interdum dolor aliquet dolor sollicitudin fermentum. Donec congue lorem a
+    molestie bibendum. Etiam nisi ante, consectetur eget placerat a, tempus a neque. Donec ut
+    elit urna. Etiam venenatis eleifend urna eget scelerisque. Aliquam in nunc quis dui
+    sollicitudin ornare ac vitae lectus.
+
+
+    Mauris non tempor quam, et lacinia sapien. Mauris accumsan eros eget libero posuere
+    vulputate. Etiam elit elit, elementum sed varius at, adipiscing vitae est. Sed nec felis
+    pellentesque, lacinia dui sed, ultricies sapien. Pellentesque orci lectus, consectetur vel
+    posuere posuere, rutrum eu ipsum. Aliquam eget odio sed ligula iaculis consequat at eget
+    orci. Mauris molestie sit amet metus mattis varius. Donec sit amet ligula eget nisi sodales
+    egestas. Aliquam interdum dolor aliquet dolor sollicitudin fermentum. Donec congue lorem a
+    molestie bibendum. Etiam nisi ante, consectetur eget placerat a, tempus a neque. Donec ut
+    elit urna. Etiam venenatis eleifend urna eget scelerisque. Aliquam in nunc quis dui
+    sollicitudin ornare ac vitae lectus.
+# SEO fields
+slug: null
+metaTitle: null
+metaDescription: null
+metaKeywords: null

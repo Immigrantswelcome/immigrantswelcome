@@ -106,6 +106,7 @@ body.home-page .page-content {
         fill: #fff;
         stroke: #fff;
         opacity: 0.7;
+        transition: opacity 0.3s;
     }
 
     body.home-page .logos__grid-expand__logo:hover {

@@ -1,0 +1,96 @@
+body.story-page .page-content {
+    background: #235371;
+}
+
+body.story-page .story {
+    padding-top: 60px;
+}
+
+body.story-page .story__hero {
+    position: relative;
+}
+
+body.story-page .story__hero__image {
+    border-radius: 4px;
+    overflow: hidden;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 40px;
+    width: 784px;
+}
+
+body.story-page .story__main {
+    color: #FFF;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 120px;
+    width: 624px;
+}
+
+body.story-page .story__main__title {
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 56px;
+    margin-bottom: 10px;
+}
+
+body.story-page .story__main__details {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 28px;
+    margin-bottom: 20px;
+}
+
+body.story-page .story__main__details__when {
+    color: rgba(255,255,255,0.7);
+}
+
+body.story-page .story__main__text {
+    margin-bottom: 40px;
+}
+
+body.story-page .story__main__share {
+    margin-bottom: 40px;
+}
+
+.story__main__share__item {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.story__main__share__item--label {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 16px;
+    margin-right: 16px;
+    text-transform: uppercase;
+}
+
+.story__main__share__item--logo {
+    margin-right: 12px;
+    fill: #fff;
+    stroke: #248DDD;
+    transform: scale(1);
+    transition: transform 0.3s;
+}
+
+.story__main__share__item--logo:hover {
+    transform: scale(1.2);
+}
+
+body.story-page .story__main__actions {
+    border-top: 1px solid rgba(255,255,255,0.5);
+    padding-top: 24px;
+}
+
+body.story-page .story__main__actions__action {
+    width: 300px;
+}
+
+body.story-page .story__main__actions__action:first-child {
+    margin-right: 24px;
+}
+
+body.story-page .story__main__actions__action:last-child {
+    width: 296px;
+}

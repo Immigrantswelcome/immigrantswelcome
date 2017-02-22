@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block meta_title %}{{ page.meta_title or page.title }}{% endblock %}
+{% block meta_description %}{{ page.metaDescription }}{% endblock %}
+{% block meta_keywords %}{{ page.metaKeywords }}{% endblock %}
+
+{% block body_class %}story-page{% endblock %}
+
+{% block content %}
+    <div class="page-width">
+        <div class="page-width-inner">
+            <div class="story">
+                <div class="story__hero">
+                    <div class="story__hero__image">
+                        <img src="{{ page.image | thumbnail('784x480') }}" />
+                    </div>
+                </div>
+                <div class="story__main">
+                    <div class="story__main__title">{{ page.title }}</div>
+                    <div class="story__main__details">
+                        <div class="story__main__details__name-from">{{ page.name }}, {{ page.from }}</div>
+                        <div class="story__main__details__when">Immigrated in {{ page.immigratedIn }}</div>
+                    </div>
+                    <div class="story__main__text richtext">
+                        {{ page.text | marked }}
+                    </div>
+                    <div class="story__main__share">
+                        <div class="story__main__share__item story__main__share__item--label">share story:</div>
+                        <a class="story__main__share__item story__main__share__item--logo" href="">
+                            <svg width="38" height="38">
+                                <use xlink:href="{% static 'icon_sprite/sprite.svg' %}#facebook"></use>
+                            </svg>
+                        </a>
+                        <a class="story__main__share__item story__main__share__item--logo" href="">
+                            <svg width="38" height="38">
+                                <use xlink:href="{% static 'icon_sprite/sprite.svg' %}#twitter"></use>
+                            </svg>
+                        </a>
+                        <a class="story__main__share__item story__main__share__item--logo" href="">
+                            <svg width="38" height="38">
+                                <use xlink:href="{% static 'icon_sprite/sprite.svg' %}#email"></use>
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="story__main__actions">
+                        <button class="story__main__actions__action">add your story</button>
+                        <button class="story__main__actions__action button--reverse">join the campaign</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

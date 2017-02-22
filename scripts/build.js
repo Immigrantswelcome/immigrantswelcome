@@ -10,6 +10,7 @@ const cssnano = require('cssnano');
 const deasync = require('deasync');
 const globby = require('globby');
 const md5 = require('md5');
+const marked = require('marked');
 const nunjucks = require('nunjucks');
 const postcss = require('postcss');
 const sharp = require('sharp');
@@ -44,6 +45,19 @@ fs.mkdirsSync(THUMBS_DEST_PATH, 0o755);
 
 function getTimestamp(date) {
     return Math.round(+date / 1000);
+}
+
+
+function slugify(value, allowUnicode=false) {
+    value = String(value)
+    if (allowUnicode) {
+        value = value.normalize('NFKC');
+        value = value.replace(/[^\w\s-]/g, '').trim().toLowerCase();
+        return new nunjucks.runtime.SafeString(value.replace(/[-\s]+/g, '-'));
+    }
+    value = value.normalize('NFKD').replace(/[^\x00-\x7F]/g, '');
+    value = value.replace(/[^\w\s-]/g, '').trim().toLowerCase();
+    return new nunjucks.runtime.SafeString(value.replace(/[-\s]+/g, '-'));
 }
 
 
@@ -136,9 +150,21 @@ function CompressExtension() {
         var ext = path.extname(name);
         var basename = path.basename(name, ext);
         var type = ext.slice(1);
+
+
+        if (! (name in COMPRESS)) {
+            COMPRESS[name] = new Object(null);
+        }
+
+        if (type in COMPRESS[name]) {
+            // we already rendered this block
+            var blockdata = COMPRESS[name][type];
+            return new nunjucks.runtime.SafeString(this.outputTemplate[type](blockdata.url));
+        }
+
         var find = this.finds[type];
         var lines = body().split(/\n/);
-        var compress = [];
+        var files = [];
         var compressTime = 0;
         lines.forEach(line => {
             var match = null;
@@ -152,22 +178,20 @@ function CompressExtension() {
                         compressTime = timestamp;
                     }
                 }
-                compress.push(filePath);
+                files.push(filePath);
             }
         });
-
-        var view = context.ctx.view;
-        if (! (view in COMPRESS)) {
-            COMPRESS[view] = new Object(null);
-        }
-        COMPRESS[view][type] = {
-            name: basename,
-            files: compress
-        };
 
         var outputFile = this.outputFile[type](basename);
         // if any file exists add a timestamp to bust caches
         var url = `${outputFile}?v=${compressTime}`;
+
+        COMPRESS[name][type] = {
+            name: basename,
+            files: files,
+            url: url
+        };
+
         // deploy the compressed url
         return new nunjucks.runtime.SafeString(this.outputTemplate[type](url));
     };
@@ -237,57 +261,30 @@ function SpacelessExtension() {
     };
 }
 
-function ThumbnailExtension() {
-    this.tags = ['thumbnail'];
+env.addExtension('StaticExtension', new StaticExtension());
+env.addExtension('CompressExtension', new CompressExtension());
+env.addExtension('AutoprefixExtension', new AutoprefixExtension());
+env.addExtension('SpacelessExtension', new SpacelessExtension());
 
-    this.parse = (parser, nodes, lexer) => {
-        var start = parser.tokens.index;
-        var symboltok = parser.nextToken();
+env.addFilter('marked', str => new nunjucks.runtime.SafeString(marked(str)));
+env.addFilter('thumbnail', (imageUrl, size, kwargs) => {
+    var area = typeof kwargs === 'undefined' ? null : kwargs.area || null;
+    var sizes = size.split('x');
 
-        var args = parser.parseSignature(null, true);
-        var current = parser.tokens.index;
+    var width = parseInt(sizes[0]) || null;
+    var height = parseInt(sizes[1]) || null;
 
-        // fast backup to where we started
-        parser.tokens.backN(current - start);
-        // slow backup to before block open
-        while (parser.tokens.current() !== '{') {
-            parser.tokens.back();
-        }
-        // clear saved peek
-        parser.peeked = null;
-        // peek up to block end
-        var peek;
-        while (peek = parser.peekToken()) {
-            if (peek.type === lexer.TOKEN_BLOCK_END) {
-                break;
-            }
-            parser.nextToken();
-        }
-        // the length of the block end
-        parser.tokens.backN(2);
-        // fake symboltok to fool advanceAfterBlockEnd name detection
-        parser.peeked = symboltok;
-        // we are right up to the edge of end-block, so we are "in_code"
-        parser.tokens.in_code = true;
-        // get the raw body!
-        var body = parser.parseRaw('thumbnail');
+    var hash = md5(`${imageUrl}:${size}`);
+    var name = `${hash}${path.extname(imageUrl)}`;
+    var savePath = path.join(THUMBS_DEST_PATH, name);
+    if (! fs.existsSync(savePath)) {
+        var imagePath = path.join(SRC, imageUrl);
+        var image = sharp(imagePath);
 
-        return new nodes.CallExtension(this, 'run', args, [body]);
-    };
+        var imgWidth = width;
+        var imgHeight = height;
 
-    this.run = (context, imageUrl, size, body) => {
-        var sizes = size.split('x');
-
-        var width = parseInt(sizes[0]) || null;
-        var height = parseInt(sizes[1]) || null;
-
-        var hash = md5(`${imageUrl}:${size}`);
-        var name = `${hash}${path.extname(imageUrl)}`;
-        var savePath = path.join(THUMBS_DEST_PATH, name);
-        if (! fs.existsSync(savePath)) {
-            var imagePath = path.join(SRC, imageUrl);
-            var image = sharp(imagePath);
-
+        if (area !== null) {
             // desync getting the metadata
             var metadata = null;
             image.metadata().then(res => {
@@ -295,14 +292,14 @@ function ThumbnailExtension() {
             });
             deasync.loopWhile(() => metadata === null);
 
-            var imgWidth = metadata.width;
-            var imgHeight = metadata.height;
+            imgWidth = metadata.width;
+            imgHeight = metadata.height;
 
-            // Area should be under 4000, should be less than the max dimensions
+            // Area should be under `area`, should be less than the max dimensions
             // This is to make the images look relatively the same size, so no one logo overwhelms
             var i = 0;
             var aspect = imgHeight / imgWidth;
-            while (imgWidth * imgHeight > 4000 || (imgWidth > width && imgHeight > height)) {
+            while (imgWidth * imgHeight > area || (imgWidth > width && imgHeight > height)) {
                 imgWidth -= 1;
                 imgHeight = Math.round(imgWidth * aspect);
                 i += 1;
@@ -310,27 +307,18 @@ function ThumbnailExtension() {
                     throw 'Image resizing took way too long';
                 }
             }
-
-            // async is fine here
-            promises.push(image
-                .resize(imgWidth, imgHeight)
-                .max()
-                .withoutEnlargement()
-                .toFile(savePath));
         }
 
-        var ctx = Object.assign({
-            thumb: `${STATIC_URL}thumbs/${name}`
-        }, context.ctx);
-        return new nunjucks.runtime.SafeString(env.renderString(body(), ctx));
-    };
+        // async is fine here
+        promises.push(image
+            .resize(imgWidth, imgHeight)
+            .max()
+            .withoutEnlargement()
+            .toFile(savePath));
     }
 
-env.addExtension('StaticExtension', new StaticExtension());
-env.addExtension('CompressExtension', new CompressExtension());
-env.addExtension('AutoprefixExtension', new AutoprefixExtension());
-env.addExtension('SpacelessExtension', new SpacelessExtension());
-env.addExtension('ThumbnailExtension', new ThumbnailExtension());
+    return `${STATIC_URL}thumbs/${name}`;
+});
 
 // data
 
@@ -346,7 +334,10 @@ function loadData(model, search="*") {
             var data = [];
             for (var i = 0, l = files.length; i < l; ++i) {
                 var file = files[i];
-                data.push(yaml.safeLoad(fs.readFileSync(file)));
+                var datum = yaml.safeLoad(fs.readFileSync(file));
+                var ext = path.extname(file);
+                datum.pk = path.basename(file, ext);
+                data.push(datum);
             }
             return data;
         };
@@ -354,44 +345,55 @@ function loadData(model, search="*") {
     return null;
 }
 
+var config = loadData('config', null)();
+
 // lets make the views
 function makeView(file, template, context) {
     var viewPath = path.join(DIST, file);
     fs.mkdirsSync(path.dirname(viewPath), 0o755);
-    var contents = env.render(template, context);
+    var contents = env.render(template, Object.assign(
+        {}, context, {
+            config: config
+        }
+    ));
     fs.writeFileSync(viewPath, contents);
 }
 
 var views = {
-    'home': (config, view) => {
+    'home': () => {
         var page = loadData('homepage', null);
         var logos = loadData('logo', '+([0-9])');
 
         var context = {
-            config: config,
-            view: view,
             page: page(),
             logos: logos,
         };
         makeView('index.html', path.join('general', 'home.html'), context);
     },
     'story': [
-        (pk, slug) => `${pk}/${slug}.html`,
-        function*() {
-            // TODO: do something
-            yield [pk, slug];
-        },
-        (config, path, pk, slug, view) => {
-            var context = {
-                view: view,
-                DEBUG: true,
+        (pk, slug) => `story/${pk}/${slug}/index.html`,
+        (() => {
+            var iter = {};
+            iter[Symbol.iterator] = function*() {
+                var storiesData = loadData('story', '+([0-9])');
+                var stories = storiesData();
+                for (var i = 0, l = stories.length; i < l; ++i) {
+                    var story = stories[i];
+                    yield [story.pk, story.slug || slugify(story.title)];
+                }
             };
-            makeView(path, path.join('story', 'detail.html'), context);
+            return iter;
+        })(),
+        (url, pk, slug) => {
+            var context = {
+                page: loadData('story', pk)()[0]
+            };
+            makeView(url, path.join('story', 'detail.html'), context);
         }
     ]
 };
 
-var config = loadData('config', null)();
+
 
 if (config.DEBUG) {
     try {
@@ -400,41 +402,54 @@ if (config.DEBUG) {
 }
 
 Object.keys(views).forEach(view => {
-    if (view === 'story') return;
-    views[view](config, view);
+    var viewFunc = views[view];
 
-    if (config.DEBUG) {
-        return;
-    }
+    if (Array.isArray(viewFunc)) {
+        var viewArray = viewFunc;
+        var viewUrl = viewArray[0];
+        var viewArgs = viewArray[1];
+        viewFunc = viewArray[2];
 
-    var compress = COMPRESS[view];
-
-    if ('css' in compress) {
-        // process the css
-        var cssOpts = compress.css;
-        var imports = [];
-        var cssPaths = cssOpts.files;
-        cssPaths.forEach(cssPath => {
-            if (fs.existsSync(cssPath)) {
-                imports.push(`@import "${cssPath}";`);
-            }
-        });
-        promises.push(
-            cssCompressor.process(imports.join(''))
-            .then(result => {
-                fs.writeFileSync(path.join(CSS_DEST_PATH, `${cssOpts.name}.css`), result.css);
-            })
-        );
-    }
-
-    if ('js' in compress) {
-        // process the js
-        var jsOpts = compress.js;
-        var jsPaths = jsOpts.files;
-        var result = uglifyJS.minify(jsPaths);
-        fs.writeFileSync(path.join(JS_DEST_PATH, `${jsOpts.name}.js`), result.code);
+        for (let value of viewArgs) {
+            var url = viewUrl(...value);
+            viewFunc(url, ...value);
+        }
+    } else {
+        viewFunc();
     }
 });
+
+if (! config.DEBUG) {
+    COMPRESS.forEach(name => {
+        var compress = COMPRESS[name];
+
+        if ('css' in compress) {
+            // process the css
+            var cssOpts = compress.css;
+            var imports = [];
+            var cssPaths = cssOpts.files;
+            cssPaths.forEach(cssPath => {
+                if (fs.existsSync(cssPath)) {
+                    imports.push(`@import "${cssPath}";`);
+                }
+            });
+            promises.push(
+                cssCompressor.process(imports.join(''))
+                .then(result => {
+                    fs.writeFileSync(path.join(CSS_DEST_PATH, `${cssOpts.name}.css`), result.css);
+                })
+            );
+        }
+
+        if ('js' in compress) {
+            // process the js
+            var jsOpts = compress.js;
+            var jsPaths = jsOpts.files;
+            var result = uglifyJS.minify(jsPaths);
+            fs.writeFileSync(path.join(JS_DEST_PATH, `${jsOpts.name}.js`), result.code);
+        }
+    });
+}
 
 // move images to dist
 promises.push(globby([path.join(SRC, 'images', '**', '*')]).then(paths => {
@@ -443,6 +458,12 @@ promises.push(globby([path.join(SRC, 'images', '**', '*')]).then(paths => {
         fs.copySync(imagePath, newImagePath, {preserveTimestamps:true});
     });
 }));
+
+// move robots.txt to dist
+promises.push(fs.copy(
+    path.join(SRC, 'html', 'robots.txt'),
+    path.join(DIST, 'robots.txt'),
+    {preserveTimestamps:true}));
 
 Promise.all(promises).then(() => {
     fs.remove(BUILD);

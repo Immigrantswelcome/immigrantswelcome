@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
 {% block no_meta_title %}{% endblock %}
-{% block meta_description %}{{ page.meta_description }}{% endblock %}
-{% block meta_keywords %}{{ page.meta_keywords }}{% endblock %}
+{% block meta_description %}{{ page.metaDescription }}{% endblock %}
+{% block meta_keywords %}{{ page.metaKeywords }}{% endblock %}
 
 {% block body_class %}home-page{% endblock %}
 
@@ -38,21 +38,23 @@
                 <div class="logos__title">{{ page.logosTitle }}</div>
                 <div class="logos__text">{{ page.logosText }}</div>
                 {% spaceless %}
-                <div class="logos__grid">
                 {% for logo in logos() %}
-                    <div class="logos__grid__logo">
-                        {% thumbnail logo.url, '155x63' %}
-                            <img class="logos__grid__logo__img" src="{{ thumb }}" alt="{{ logo.alt }}" />
-                        {% endthumbnail %}
-                    </div>
+                    {% if loop.first %}
+                        <div class="logos__grid">
+                    {% endif %}
+                            <div class="logos__grid__logo">
+                                <img class="logos__grid__logo__img" src="{{ logo.url | thumbnail('155x63', area=4000) }}" alt="{{ logo.alt }}" />
+                            </div>
+                    {% if loop.last %}
+                        </div>
+                        <div class="logos__grid-expand">
+                            <svg class="logos__grid-expand__logo" width="40" height="40">
+                                <use xlink:href="{% static 'icon_sprite/sprite.svg' %}#view-all"></use>
+                            </svg>
+                        </div>
+                    {% endif %}
                 {% endfor %}
-                </div>
                 {% endspaceless %}
-                <div class="logos__grid-expand">
-                    <svg class="logos__grid-expand__logo" width="40" height="40">
-                        <use xlink:href="{% static 'icon_sprite/sprite.svg' %}#view-all"></use>
-                    </svg>
-                </div>
             </div>
 
             <div class="actions">

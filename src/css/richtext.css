@@ -15,6 +15,10 @@
     margin-bottom: 24px;
 }
 
+.richtext p {
+    line-height: 28px;
+}
+
 .richtext img {
     max-width: 100%;
     display: block;
