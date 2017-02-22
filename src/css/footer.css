@@ -1,0 +1,41 @@
+.page-footer {
+    background: #1E465F;
+    text-align: center;
+}
+
+.page-footer .footer {
+    margin-top: 100px;
+    line-height: 24px;
+}
+
+.page-footer .footer__logo {
+    margin-bottom: 40px;
+    width: 316px;
+}
+
+.page-footer .footer__press {
+    color: #FFF;
+    font-weight: 500;
+    font-size: 16px;
+    margin-bottom: 40px;
+}
+
+.page-footer .footer__press__co {
+    color: rgba(255,255,255,0.70);
+}
+
+.page-footer .footer__copyright {
+    color: rgba(255,255,255,0.70);
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.page-footer .footer__links {
+    color: rgba(255,255,255,0.70);
+    font-size: 14px;
+    margin-bottom: 60px;
+}
+
+.page-footer .footer__links__link {
+    padding: 0 10px;
+}

@@ -1,9 +1,10 @@
 {
-  "name": "fftf-immigration-stories",
+  "name": "immigrantswelcome.github.io",
   "version": "1.0.0",
   "private": true,
   "scripts": {
     "build": "./scripts/build",
+    "clean_thumbnails": "rm dist/static/thumbs/*",
     "icons": "./scripts/build_icons",
     "prefix": "./scripts/prefix_css",
     "watch": "./scripts/watch"
@@ -19,6 +20,11 @@
     "globby": "^6.1.0",
     "nunjucks": "^3.0.0",
     "uglify-js": "^2.7.5",
-    "js-yaml": "^3.8.1"
+    "js-yaml": "^3.8.1",
+    "fs-extra": "^2.0.0",
+    "postcss-import": "^9.1.0",
+    "deasync": "^0.1.9",
+    "md5": "^2.2.1",
+    "sharp": "^0.17.2"
   }
 }

@@ -1,0 +1,21 @@
+input {
+    background: #FFF;
+    border: none;
+    border-radius: 4px;
+    padding: 12px 24px;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+button {
+    background: #248DDD;
+    color: #FFF;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    font-family: "Roboto", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 16px 45px;
+    text-transform: uppercase;
+}

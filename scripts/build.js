@@ -7,14 +7,16 @@ const path = require('path');
 const atImport = require("postcss-import")
 const autoprefixer = require('autoprefixer');
 const cssnano = require('cssnano');
+const deasync = require('deasync');
 const globby = require('globby');
+const md5 = require('md5');
 const nunjucks = require('nunjucks');
 const postcss = require('postcss');
+const sharp = require('sharp');
 const uglifyJS = require('uglify-js');
 const yaml = require('js-yaml');
 
-
-var BASE_URL = '';
+var promises = [];
 
 var DB = path.join('.', 'db');
 var SRC = path.join('.', 'src');
@@ -25,6 +27,8 @@ var DIST = path.join('.', 'dist');
 var STATIC_ROOT = path.join(DIST, 'static');
 var CSS_DEST_PATH = path.join(STATIC_ROOT, 'css');
 var JS_DEST_PATH = path.join(STATIC_ROOT, 'js');
+var THUMBS_DEST_PATH = path.join(STATIC_ROOT, 'thumbs');
+var DEBUG_SRC_PATH = path.join(DIST, 'src');
 
 var STATIC_URL = '/static/';
 
@@ -35,6 +39,7 @@ fs.mkdirsSync(JS_BUILD_PATH, 0o755);
 // make dest directories
 fs.mkdirsSync(CSS_DEST_PATH, 0o755);
 fs.mkdirsSync(JS_DEST_PATH, 0o755);
+fs.mkdirsSync(THUMBS_DEST_PATH, 0o755);
 
 
 function getTimestamp(date) {
@@ -81,14 +86,14 @@ function StaticExtension() {
 
     this.run = (context, file) => {
         var filePath = path.join(SRC, file);
-        var absFileUrl = `${BASE_URL}${STATIC_URL}${file}`;
+        var fileUrl = `${STATIC_URL}${file}`;
         // if the file exists add a timestamp to bust caches
         if (fs.existsSync(filePath)) {
             var stat = fs.lstatSync(filePath);
             var timestamp = getTimestamp(stat.mtime);
-            absFileUrl = `${absFileUrl}?v=${timestamp}`;
+            fileUrl = `${fileUrl}?v=${timestamp}`;
         }
-        return absFileUrl;
+        return fileUrl;
     };
 }
 
@@ -124,6 +129,10 @@ function CompressExtension() {
     };
 
     this.run = (context, name, body) => {
+        if (context.ctx.config.DEBUG) {
+            return new nunjucks.runtime.SafeString(
+                body().replace(new RegExp(STATIC_URL, 'g'), path.join('/', SRC, '/')));
+        }
         var ext = path.extname(name);
         var basename = path.basename(name, ext);
         var type = ext.slice(1);
@@ -183,6 +192,9 @@ function AutoprefixExtension() {
     };
 
     this.run = (context, body) => {
+        if (context.ctx.config.DEBUG) {
+            return new nunjucks.runtime.SafeString(body());
+        }
         var lines = body().split(/\n/);
         var output = [];
         lines.forEach(line => {
@@ -204,9 +216,121 @@ function AutoprefixExtension() {
     };
 }
 
+function SpacelessExtension() {
+    this.tags = ['spaceless'];
+
+    this.parse = (parser, nodes, lexer) => {
+        var tok = parser.nextToken();
+
+        var args = parser.parseSignature(null, true);
+        parser.advanceAfterBlockEnd(tok.value);
+
+        var body = parser.parseUntilBlocks('endspaceless');
+
+        parser.advanceAfterBlockEnd();
+
+        return new nodes.CallExtension(this, 'run', args, [body]);
+    };
+
+    this.run = (context, body) => {
+        return new nunjucks.runtime.SafeString(body().replace(/\s+/g, ' ').replace(/>\s</g, '><'));
+    };
+}
+
+function ThumbnailExtension() {
+    this.tags = ['thumbnail'];
+
+    this.parse = (parser, nodes, lexer) => {
+        var start = parser.tokens.index;
+        var symboltok = parser.nextToken();
+
+        var args = parser.parseSignature(null, true);
+        var current = parser.tokens.index;
+
+        // fast backup to where we started
+        parser.tokens.backN(current - start);
+        // slow backup to before block open
+        while (parser.tokens.current() !== '{') {
+            parser.tokens.back();
+        }
+        // clear saved peek
+        parser.peeked = null;
+        // peek up to block end
+        var peek;
+        while (peek = parser.peekToken()) {
+            if (peek.type === lexer.TOKEN_BLOCK_END) {
+                break;
+            }
+            parser.nextToken();
+        }
+        // the length of the block end
+        parser.tokens.backN(2);
+        // fake symboltok to fool advanceAfterBlockEnd name detection
+        parser.peeked = symboltok;
+        // we are right up to the edge of end-block, so we are "in_code"
+        parser.tokens.in_code = true;
+        // get the raw body!
+        var body = parser.parseRaw('thumbnail');
+
+        return new nodes.CallExtension(this, 'run', args, [body]);
+    };
+
+    this.run = (context, imageUrl, size, body) => {
+        var sizes = size.split('x');
+
+        var width = parseInt(sizes[0]) || null;
+        var height = parseInt(sizes[1]) || null;
+
+        var hash = md5(`${imageUrl}:${size}`);
+        var name = `${hash}${path.extname(imageUrl)}`;
+        var savePath = path.join(THUMBS_DEST_PATH, name);
+        if (! fs.existsSync(savePath)) {
+            var imagePath = path.join(SRC, imageUrl);
+            var image = sharp(imagePath);
+
+            // desync getting the metadata
+            var metadata = null;
+            image.metadata().then(res => {
+                metadata = res;
+            });
+            deasync.loopWhile(() => metadata === null);
+
+            var imgWidth = metadata.width;
+            var imgHeight = metadata.height;
+
+            // Area should be under 4000, should be less than the max dimensions
+            // This is to make the images look relatively the same size, so no one logo overwhelms
+            var i = 0;
+            var aspect = imgHeight / imgWidth;
+            while (imgWidth * imgHeight > 4000 || (imgWidth > width && imgHeight > height)) {
+                imgWidth -= 1;
+                imgHeight = Math.round(imgWidth * aspect);
+                i += 1;
+                if (i === 1000) {
+                    throw 'Image resizing took way too long';
+                }
+            }
+
+            // async is fine here
+            promises.push(image
+                .resize(imgWidth, imgHeight)
+                .max()
+                .withoutEnlargement()
+                .toFile(savePath));
+        }
+
+        var ctx = Object.assign({
+            thumb: `${STATIC_URL}thumbs/${name}`
+        }, context.ctx);
+        return new nunjucks.runtime.SafeString(env.renderString(body(), ctx));
+    };
+    }
+
 env.addExtension('StaticExtension', new StaticExtension());
 env.addExtension('CompressExtension', new CompressExtension());
 env.addExtension('AutoprefixExtension', new AutoprefixExtension());
+env.addExtension('SpacelessExtension', new SpacelessExtension());
+env.addExtension('ThumbnailExtension', new ThumbnailExtension());
 
 // data
 
@@ -246,6 +370,7 @@ var views = {
         var context = {
             config: config,
             view: view,
+            page: page(),
             logos: logos,
         };
         makeView('index.html', path.join('general', 'home.html'), context);
@@ -266,13 +391,21 @@ var views = {
     ]
 };
 
-var promises = [];
+var config = loadData('config', null)();
+
+if (config.DEBUG) {
+    try {
+        fs.symlinkSync(path.resolve(SRC), DEBUG_SRC_PATH, 'dir');
+    } catch(err) {};
+}
 
 Object.keys(views).forEach(view => {
     if (view === 'story') return;
-    var config = loadData('config', null);
     views[view](config, view);
 
+    if (config.DEBUG) {
+        return;
+    }
 
     var compress = COMPRESS[view];
 
@@ -313,6 +446,10 @@ promises.push(globby([path.join(SRC, 'images', '**', '*')]).then(paths => {
 
 Promise.all(promises).then(() => {
     fs.remove(BUILD);
+
+    if (! config.DEBUG) {
+        fs.mkdirsSync(DEBUG_SRC_PATH);
+    }
 });
 
 

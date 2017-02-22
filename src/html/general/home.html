@@ -7,7 +7,63 @@
 {% block body_class %}home-page{% endblock %}
 
 {% block content %}
-    {% for logo in logos() %}
-        <img src="{% static logo.url %}" alt="{{ logo.alt }}" />
-    {% endfor %}
+    <div class="page-width">
+        <div class="page-width-inner">
+            <div class="hero">
+                <div class="hero__title">{{ page.heroTitle }}</div>
+                <div class="hero__text">{{ page.heroText }}</div>
+            </div>
+            <div class="signup">
+                <form class="signup__form">
+                    <div class="signup__form__group">
+                        <input id="id_name" name="name" type="text" placeholder="Your name" />
+                    </div>
+                    <div class="signup__form__group">
+                        <input id="id_email" name="email" type="text" placeholder="Email" />
+                    </div>
+                    <div class="signup__form__group">
+                        <input id="id_zipcode" name="zipcode" type="text" placeholder="Zip code" />
+                    </div>
+                    <div class="signup__form__group">
+                        <button name="sign">sign your name</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="stories">
+                <!-- TODO: -->
+            </div>
+
+            <div class="logos">
+                <div class="logos__title">{{ page.logosTitle }}</div>
+                <div class="logos__text">{{ page.logosText }}</div>
+                {% spaceless %}
+                <div class="logos__grid">
+                {% for logo in logos() %}
+                    <div class="logos__grid__logo">
+                        {% thumbnail logo.url, '155x63' %}
+                            <img class="logos__grid__logo__img" src="{{ thumb }}" alt="{{ logo.alt }}" />
+                        {% endthumbnail %}
+                    </div>
+                {% endfor %}
+                </div>
+                {% endspaceless %}
+                <div class="logos__grid-expand">
+                    <svg class="logos__grid-expand__logo" width="40" height="40">
+                        <use xlink:href="{% static 'icon_sprite/sprite.svg' %}#view-all"></use>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="actions__cta">join the campaign</button>
+                <div class="actions__banner-enclosure">
+                    <div class="actions__banner">
+                    </div>
+                </div>
+                <div class="actions__help">Add this script right after the &lt;body&gt; tag. To see an example <a class="actions__help__link" href="">go here.</a></div>
+                <div class="actions__script">&lt;script src="https://fightforthefuture.github.io/immigration-is-america-banner/banner/rtn.js" async&gt;&lt;/script&gt;</div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

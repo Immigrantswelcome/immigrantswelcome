@@ -8,6 +8,7 @@
     <meta name="description" content="{% block meta_description %}{% endblock %}" />
 
     <link href="{% static 'images/favicon.png' %}" rel="icon" type="image/x-icon" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i,500,700,700i,900" rel="stylesheet">
     {% compress 'style.css' %}
         <link rel="stylesheet" type="text/css" href="/static/vendor/normalize.css/normalize.css" />
         <link rel="stylesheet" type="text/css" href="/static/vendor/slick-carousel/slick/slick.css" />
@@ -18,6 +19,9 @@
             <link rel="stylesheet" type="text/css" href="/static/css/util.css" />
             <link rel="stylesheet" type="text/css" href="/static/css/header.css" />
             <link rel="stylesheet" type="text/css" href="/static/css/footer.css" />
+            <link rel="stylesheet" type="text/css" href="/static/css/form.css" />
+
+            <link rel="stylesheet" type="text/css" href="/static/css/general/home.css" />
         {% endautoprefix %}
     {% endcompress %}
     {% block css %}{% endblock %}
@@ -29,7 +33,9 @@
         <div class="page-header">
             <div class="page-width">
                 <div class="page-width-inner">
-                    <img src="{% static 'images/page-logo.svg' %}" alt="Immigration is America" />
+                    <div class="header">
+                        <img class="header__logo" src="{% static 'images/page-logo.svg' %}" alt="Immigration is America" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -39,7 +45,22 @@
         </div>
 
         <div class="page-footer">
-            <img src="{% static 'images/fftf-logo.png' %}" alt="Fight for the Future ❤️" />
+            <div class="page-width">
+                <div class="page-width-inner">
+                    <div class="footer">
+                        <img class="footer__logo" src="{% static 'images/fftf-logo.png' %}" alt="Fight for the Future ❤️" />
+                        <div class="footer__press">
+                            <div class="footer__press__co">Press Inquiries:</div>
+                            <!-- TODO: make these safe and linked -->
+                            <div class="footer__press__email">{{ config.pressEmail }}</div>
+                            <div class="footer__press__phone">{{ config.pressPhone }}</div>
+                        </div>
+                        <div class="footer__copyright">A project of Fight for the Future. No copyright intended.</div>
+                        <!-- TODO: make these safe and linked -->
+                        <div class="footer__links"><a class="footer__links__link" href="">Privacy Policy</a>|<a class="footer__links__link" href="">Donate</a>|<a class="footer__links__link" href="">Email</a></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

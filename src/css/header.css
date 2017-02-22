@@ -1,0 +1,11 @@
+.page-header {
+    background: #235371;
+}
+
+.page-header .header {
+    padding: 42px 0;
+}
+
+.page-header .header__logo {
+    width: 226px;
+}
