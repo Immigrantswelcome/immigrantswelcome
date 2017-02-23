@@ -3,4 +3,6 @@
 chokidar 'src/icons/*.svg' -c './scripts/build_icons' --initial &
 chokidar 'src/html/**/*.html' 'db/**/*' -c './scripts/build' --initial &
 browser-sync start --no-online --no-open --no-ghost-mode --no-ui --no-notify --server "dist" --files \
-    'src/css/**/*'
+    'src/css/**/*.css' \
+    'src/images/**/*' \
+    'src/icon_sprite/sprite.svg'

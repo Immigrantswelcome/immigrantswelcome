@@ -15,6 +15,7 @@ const nunjucks = require('nunjucks');
 const postcss = require('postcss');
 const sharp = require('sharp');
 const uglifyJS = require('uglify-js');
+const uuidV4 = require('uuid/v4');
 const yaml = require('js-yaml');
 
 var promises = [];
@@ -99,8 +100,11 @@ function StaticExtension() {
     };
 
     this.run = (context, file) => {
-        var filePath = path.join(SRC, file);
+        if (context.ctx.config.DEBUG) {
+            return `/src/${file}`;
+        }
         var fileUrl = `${STATIC_URL}${file}`;
+        var filePath = path.join(SRC, file);
         // if the file exists add a timestamp to bust caches
         if (fs.existsSync(filePath)) {
             var stat = fs.lstatSync(filePath);
@@ -267,6 +271,25 @@ env.addExtension('AutoprefixExtension', new AutoprefixExtension());
 env.addExtension('SpacelessExtension', new SpacelessExtension());
 
 env.addFilter('marked', str => new nunjucks.runtime.SafeString(marked(str)));
+
+env.addFilter('strip_marked', str => {
+    var tokens = marked.lexer(str.trim());
+    var strip = []
+    tokens.forEach(token => {
+        if (token.hasOwnProperty('text')) {
+            strip.push(token.text.trim());
+        }
+    });
+    return new nunjucks.runtime.SafeString(strip.join(''));
+});
+
+env.addFilter('possessive', str => {
+    if (str.endsWith('s')) {
+        return `${str}'`;
+    }
+    return `${str}'s`;
+});
+
 env.addFilter('thumbnail', (imageUrl, size, kwargs) => {
     var area = typeof kwargs === 'undefined' ? null : kwargs.area || null;
     var sizes = size.split('x');
@@ -320,13 +343,84 @@ env.addFilter('thumbnail', (imageUrl, size, kwargs) => {
     return `${STATIC_URL}thumbs/${name}`;
 });
 
+var ObfuscateEmail = (() => {
+    /*
+        Given a string representing an email address,
+        returns a mailto link with rot13 JavaScript obfuscation.
+    */
+    var replace = /@|\./gm;
+    var replaceDict = {'@': '\\100', '.': '\\056'};
+    var ROT13 = s => s.replace(
+        /[a-zA-Z]/g, c => String.fromCharCode((c<='Z'?90:122)>=(c=c.charCodeAt(0)+13)?c:c-26));
+
+    var template = new nunjucks.Template(
+        `<a {% if css_class %}class="{{ css_class }}" {% endif %}id="{{ anchor_id }}"></a><script>!function(a){function r(s){return s.replace(/[a-zA-Z]/g,function(c){return String.fromCharCode((c<='Z'?90:122)>=(c=c.charCodeAt(0)+13)?c:c-26)})}a.removeAttribute('id');a.setAttribute('href',r('znvygb:{{ email }}'));a.setAttribute('data-znvygb',a.getAttribute('href').substr(7));{% if script_set_text %}a.innerHTML=r('{{ script_set_text }}');{% endif %}a.parentElement.removeChild(a.nextElementSibling)}(document.getElementById('{{ anchor_id }}'))</script>`,
+        new nunjucks.Environment(null, { autoescape: false }));
+
+    function ObfuscateEmail(autoescape, email, link_text, css_class) {
+        this.autoescape = autoescape ? nunjucks.lib.escape : a => a;
+        this.email = this.obfuscate(email);
+        this.link_text = link_text || '';
+        css_class = css_class || '';
+        this.css_class = this.autoescape(css_class);
+    }
+
+    ObfuscateEmail.prototype.rot13Encode = function(clear) {
+        return ROT13(clear);
+    };
+
+    ObfuscateEmail.prototype.obfuscate = function(text) {
+        /* escape the text then sub @ and . then encode with rot13 */
+        return this.rot13Encode(this.autoescape(text).replace(
+            replace, match => replaceDict[match]));
+    };
+
+    ObfuscateEmail.prototype.getContext = function() {
+        /* make a context */
+        var script_set_text = '';
+        if (this.link_text === '') {
+            script_set_text = this.email;
+        } else {
+            script_set_text = this.obfuscate(this.link_text);
+        }
+
+        return {
+            'anchor_id': uuidV4(),
+            'css_class': this.css_class,
+            'email': this.email,
+            'script_set_text': script_set_text
+        };
+    };
+
+    ObfuscateEmail.prototype.render = function() {
+        return new nunjucks.runtime.SafeString(template.render(this.getContext()));
+    }
+
+    return ObfuscateEmail;
+})();
+
+env.addFilter('obfuscate_email', (email, link_text, css_class) => {
+    var obfuscate = new ObfuscateEmail(env.opts.autoescape, email, link_text, css_class);
+    return obfuscate.render();
+});
+
+env.addFilter('build_absolute_uri', path => {
+    return `${config.baseURL}${path}`;
+});
+
 // data
 
-function loadData(model, search="*") {
+function loadData(model, search="*", url=null) {
     if (search === null) {
         var files = globby.sync(path.join(DB, model, `${model}.yml`));
         if (files.length == 1) {
-            return () => yaml.safeLoad(fs.readFileSync(files[0]));
+            return () => {
+                var data = yaml.safeLoad(fs.readFileSync(files[0]));
+                if (url !== null) {
+                    data.url = url.bind(data);
+                }
+                return data;
+            };
         }
     } else {
         var files = globby.sync(path.join(DB, model, `${search}.yml`));
@@ -337,6 +431,9 @@ function loadData(model, search="*") {
                 var datum = yaml.safeLoad(fs.readFileSync(file));
                 var ext = path.extname(file);
                 datum.pk = path.basename(file, ext);
+                if (url !== null) {
+                    datum.url = url.bind(datum);
+                }
                 data.push(datum);
             }
             return data;
@@ -359,42 +456,59 @@ function makeView(file, template, context) {
     fs.writeFileSync(viewPath, contents);
 }
 
+var htmlPaths = {
+    'home': () => 'index.html',
+    'story': story => {
+        return `story/${story.pk}/${story.slug || slugify(story.title)}/index.html`
+    }
+};
+
+function url(view, page) {
+    return `/${htmlPaths[view](page).replace('index.html', '')}`;
+}
+
+function featured(itemsFunc) {
+    return () => {
+        var items = itemsFunc();
+        items.sort((a, b) => a.featured !== b.featured);
+        return items;
+    };
+}
+
 var views = {
     'home': () => {
         var page = loadData('homepage', null);
         var logos = loadData('logo', '+([0-9])');
+        var stories = loadData('story', '+([0-9])', function() {
+            return url('story', this);
+        });
 
         var context = {
             page: page(),
             logos: logos,
+            stories: featured(stories)
         };
-        makeView('index.html', path.join('general', 'home.html'), context);
+        makeView(htmlPaths.home(), path.join('general', 'home.html'), context);
     },
-    'story': [
-        (pk, slug) => `story/${pk}/${slug}/index.html`,
-        (() => {
-            var iter = {};
-            iter[Symbol.iterator] = function*() {
-                var storiesData = loadData('story', '+([0-9])');
-                var stories = storiesData();
-                for (var i = 0, l = stories.length; i < l; ++i) {
-                    var story = stories[i];
-                    yield [story.pk, story.slug || slugify(story.title)];
-                }
-            };
-            return iter;
-        })(),
-        (url, pk, slug) => {
+    'story': () => {
+        var stories = loadData('story', '+([0-9])', function() {
+            return url('story', this);
+        })();
+        for (var i = 0, l = stories.length; i < l; ++i) {
+            var story = stories[i];
             var context = {
-                page: loadData('story', pk)()[0]
+                page: story,
             };
-            makeView(url, path.join('story', 'detail.html'), context);
+            if (l > 1) {
+                context.next = url('story', stories[i + 1] || stories[0]);
+                context.prev = url('story', stories[i - 1] || stories[stories.length - 1]);
+            }
+            makeView(htmlPaths.story(story), path.join('story', 'detail.html'), context);
         }
-    ]
+    }
 };
 
-
-
+// needs to go before views are made
 if (config.DEBUG) {
     try {
         fs.symlinkSync(path.resolve(SRC), DEBUG_SRC_PATH, 'dir');
@@ -402,21 +516,7 @@ if (config.DEBUG) {
 }
 
 Object.keys(views).forEach(view => {
-    var viewFunc = views[view];
-
-    if (Array.isArray(viewFunc)) {
-        var viewArray = viewFunc;
-        var viewUrl = viewArray[0];
-        var viewArgs = viewArray[1];
-        viewFunc = viewArray[2];
-
-        for (let value of viewArgs) {
-            var url = viewUrl(...value);
-            viewFunc(url, ...value);
-        }
-    } else {
-        viewFunc();
-    }
+    views[view]();
 });
 
 if (! config.DEBUG) {
@@ -452,7 +552,7 @@ if (! config.DEBUG) {
 }
 
 // move images to dist
-promises.push(globby([path.join(SRC, 'images', '**', '*')]).then(paths => {
+promises.push(globby([path.join(SRC, '(images|icon_sprite)', '**', '*')]).then(paths => {
     paths.forEach(imagePath => {
         var newImagePath = imagePath.replace(SRC, STATIC_ROOT);
         fs.copySync(imagePath, newImagePath, {preserveTimestamps:true});

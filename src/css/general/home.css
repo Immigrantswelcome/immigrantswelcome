@@ -44,6 +44,131 @@ body.home-page .page-content {
         padding: 0;
     }
 
+/* stories */
+
+    body.home-page .stories {
+        color: #FFF;
+        max-width: 1200px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    body.home-page .stories__slides {
+        margin-bottom: 60px;
+        margin-left: -60px;
+        margin-right: -60px;
+    }
+
+    body.home-page .stories__slides__slide {
+        position: relative;
+        margin-left: 60px;
+        margin-right: 60px;
+        width: 100%;
+    }
+
+    body.home-page .stories__slides__slide--hide-initial {
+        display: none;
+    }
+
+    body.home-page .stories__slides__slide__image {
+        border-radius: 4px;
+        overflow: hidden;
+        position: relative;
+        width: 100%;
+    }
+
+    body.home-page .stories__slides__slide__image__img {
+        width: 100%;
+    }
+
+    body.home-page .stories__slides__slide__image__gradient {
+        background: linear-gradient(to bottom, transparent 54%, #000);
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+        opacity: 0.6;
+    }
+
+    body.home-page .stories__slides__tease {
+        font-size: 32px;
+        font-weight: 500;
+        line-height: 40px;
+        max-width: 466px;
+        position: absolute;
+        left: 7%;
+        bottom: 11%;
+    }
+
+    body.home-page .stories__slides__name {
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 16px;
+        text-transform: uppercase;
+        position: absolute;
+        right: 7%;
+        bottom: 9%;
+    }
+
+    body.home-page .stories__slides__name__link {
+        display: block;
+        box-sizing: border-box;
+        height: 40px;
+        padding: 8px 0;
+    }
+
+    body.home-page .stories__slides__name__link__item {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    body.home-page .stories__slides__name__link__item--text {
+        margin-right: 16px;
+    }
+
+    body.home-page .stories__slides__name__link__item--icon {
+        stroke: #FFF;
+        transform: translateX(0);
+        transition: transform 0.3s;
+    }
+
+    body.home-page .stories__slides__name__link:hover .stories__slides__name__link__item--icon {
+        transform: translateX(10px);
+    }
+
+    body.home-page .stories__arrows__arrow {
+        fill: #FFF;
+        cursor: pointer;
+        position: absolute;
+        top: calc(50% - 114px);
+        transform: scale(1);
+        transition: transform 0.3s;
+        height: 36px;
+        width: 36px;
+    }
+
+    body.home-page .stories__arrows__arrow:hover {
+        transform: scale(1.2);
+    }
+
+    body.home-page .stories__arrows__arrow--prev {
+        left: 7%;
+    }
+
+    body.home-page .stories__arrows__arrow--next {
+        right: 7%;
+    }
+
+    body.home-page .stories__cta {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 120px;
+        width: 300px;
+    }
+
 /* logos */
     body.home-page .logos {
         color: #FFF;
@@ -72,14 +197,28 @@ body.home-page .page-content {
         margin-right: auto;
         margin-bottom: 50px;
         max-width: 1092px;
-        text-align: left;
+        overflow: hidden;
+        text-align: center;
+        height: calc(91px + (91px + 20px) * 2);
+        /* TODO: fix this transition if you have time! */
+        transition: height 0.5s;
+    }
+
+    body.home-page .logos__grid--reveal {
+        height: auto;
     }
 
     body.home-page .logos__grid__logo {
         display: inline-block;
         position: relative;
+        opacity: 0;
+        transition: opacity 3s;
         height: 91px;
         width: 182px;
+    }
+
+    body.home-page .logos__grid__logo--show {
+        opacity: 1;
     }
 
     body.home-page .logos__grid__logo:nth-child(6n + 7),
@@ -99,6 +238,10 @@ body.home-page .page-content {
 
     body.home-page .logos__grid-expand {
         margin-bottom: 40px;
+    }
+
+    body.home-page .logos__grid--reveal + .logos__grid-expand {
+        display: none;
     }
 
     body.home-page .logos__grid-expand__logo {

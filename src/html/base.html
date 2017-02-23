@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
-<head{% block og_prefix %}{% endblock %}>
-    <title>{% block no_meta_title %}{% block meta_title %}{% endblock %} | {% endblock %}{{ config.SITE_META_TITLE }}</title>
-    <meta property="og:site_name" content="{{ config.SITE_META_TITLE }}" />
+<html lang="en"{% block og_prefix %}{% endblock %}>
+<head>
+    <title>{% block no_meta_title %}{% block meta_title %}{% endblock %} | {% endblock %}{{ config.siteMetaTitle }}</title>
+    <meta property="og:site_name" content="{{ config.siteMetaTitle }}" />
     <meta name="viewport" content="initial-scale=1.0" />
     <meta name="keywords" content="{% block meta_keywords %}{% endblock %}" />
     <meta name="description" content="{% block meta_description %}{% endblock %}" />
@@ -35,7 +35,7 @@
             <div class="page-width">
                 <div class="page-width-inner">
                     <div class="header">
-                        <img class="header__logo" src="{% static 'images/page-logo.svg' %}" alt="Immigration is America" />
+                        <a href="/"><img class="header__logo" src="{% static 'images/page-logo.svg' %}" alt="Immigration is America" /></a>
                     </div>
                 </div>
             </div>
@@ -52,13 +52,11 @@
                         <img class="footer__logo" src="{% static 'images/fftf-logo.png' %}" alt="Fight for the Future ❤️" />
                         <div class="footer__press">
                             <div class="footer__press__co">Press Inquiries:</div>
-                            <!-- TODO: make these safe and linked -->
-                            <div class="footer__press__email">{{ config.pressEmail }}</div>
-                            <div class="footer__press__phone">{{ config.pressPhone }}</div>
+                            <div class="footer__press__email">{{ config.pressEmail | obfuscate_email }}</div>
+                            <div class="footer__press__phone"><a href="tel:{{ config.pressPhone }}">{{ config.pressPhone }}</a></div>
                         </div>
                         <div class="footer__copyright">A project of Fight for the Future. No copyright intended.</div>
-                        <!-- TODO: make these safe and linked -->
-                        <div class="footer__links"><a class="footer__links__link" href="">Privacy Policy</a>|<a class="footer__links__link" href="">Donate</a>|<a class="footer__links__link" href="">Email</a></div>
+                        <div class="footer__links"><a class="footer__links__link" href="{{ config.privacyUrl }}">Privacy Policy</a>|<a class="footer__links__link" href="{{ config.donateUrl }}">Donate</a>|{{ config.email | obfuscate_email("Email", "footer__links__link") }}</div>
                     </div>
                 </div>
             </div>
@@ -76,6 +74,9 @@
         <script src="/static/vendor/svg4everybody/dist/svg4everybody.min.js"></script>
         <script src="/static/vendor/slick-carousel/slick/slick.min.js"></script>
         <script src="/static/vendor/autosize/dist/autosize.min.js"></script>
+
+        <script src="/static/js/lonely/scroll_reveal/scroll_reveal.js"></script>
+
         <script src="/static/js/main.js"></script>
     {% endcompress %}
     {% block js %}{% endblock %}

@@ -1,8 +1,20 @@
 {% extends 'base.html' %}
 
-{% block meta_title %}{{ page.meta_title or page.title }}{% endblock %}
+{% block og_prefix %} prefix="article: http://ogp.me/ns/article#"{% endblock %}
+
+{% block meta_title %}{{ page.metaTitle or page.title }}{% endblock %}
 {% block meta_description %}{{ page.metaDescription }}{% endblock %}
 {% block meta_keywords %}{{ page.metaKeywords }}{% endblock %}
+
+{% block head %}
+    <meta property="og:title" content="{{ page.title }}" />
+    <meta property="og:description" content="{{ page.text | strip_marked | truncate(255) }}" />
+    <meta property="og:url" content="{{ page.url() | build_absolute_uri }}" />
+    <meta property="og:image" content="{{ page.image | build_absolute_uri }}" />
+    <meta property="og:type" content="article" />
+    <meta property="article:publisher" content="{{ config.facebookPage }}" />
+    <meta property="article:section" content="Immigration Stories" />
+{% endblock %}
 
 {% block body_class %}story-page{% endblock %}
 
@@ -13,6 +25,18 @@
                 <div class="story__hero">
                     <div class="story__hero__image">
                         <img src="{{ page.image | thumbnail('784x480') }}" />
+                    </div>
+                    <div class="story__hero__arrows">
+                        <a href="{{ prev }}">
+                            <svg class="story__hero__arrows__arrow story__hero__arrows__arrow--prev" width="36" height="36">
+                                <use xlink:href="{% static 'icon_sprite/sprite.svg' %}#chevron-left"></use>
+                            </svg>
+                        </a>
+                        <a href="{{ next }}">
+                            <svg class="story__hero__arrows__arrow story__hero__arrows__arrow--next" width="36" height="36">
+                                <use xlink:href="{% static 'icon_sprite/sprite.svg' %}#chevron-right"></use>
+                            </svg>
+                        </a>
                     </div>
                 </div>
                 <div class="story__main">
@@ -26,17 +50,17 @@
                     </div>
                     <div class="story__main__share">
                         <div class="story__main__share__item story__main__share__item--label">share story:</div>
-                        <a class="story__main__share__item story__main__share__item--logo" href="">
+                        <a class="story__main__share__item story__main__share__item--logo" href="#" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u={{ page.url() | build_absolute_uri }}','facebook-share-dialog','width=626,height=436');return false;">
                             <svg width="38" height="38">
                                 <use xlink:href="{% static 'icon_sprite/sprite.svg' %}#facebook"></use>
                             </svg>
                         </a>
-                        <a class="story__main__share__item story__main__share__item--logo" href="">
+                        <a class="story__main__share__item story__main__share__item--logo" href="#" onclick="window.open('https://twitter.com/intent/tweet?status={{ page.title }}+{{ page.url() | build_absolute_uri }}','twitter-share-dialog','width=626,height=436');return false;">
                             <svg width="38" height="38">
                                 <use xlink:href="{% static 'icon_sprite/sprite.svg' %}#twitter"></use>
                             </svg>
                         </a>
-                        <a class="story__main__share__item story__main__share__item--logo" href="">
+                        <a class="story__main__share__item story__main__share__item--logo" href="mailto:?subject={{ page.name | possessive | urlencode }}%20story&body={{ page.url() | build_absolute_uri }}">
                             <svg width="38" height="38">
                                 <use xlink:href="{% static 'icon_sprite/sprite.svg' %}#email"></use>
                             </svg>

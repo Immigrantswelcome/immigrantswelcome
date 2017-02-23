@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <polygon id="path" points="45.5525 16.0525 40.5 11 19 32.5 40.5 54 45.5525 48.9475 29.1408333 32.5" transform="translate(32.276250, 32.500000) scale(-1, 1) translate(-32.276250, -32.500000)"></polygon>
+        <filter x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox" id="filter">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="a"></feOffset>
+            <feGaussianBlur stdDeviation="7.5" in="a" result="b"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0" type="matrix" in="b"></feColorMatrix>
+        </filter>
+    </defs>
+    <g stroke="none" fill-rule="evenodd">
+        <use fill="#000000" fill-opacity="1" filter="url(#filter)" xlink:href="#path"></use>
+        <use fill="#000000" xlink:href="#path"></use>
+    </g>
+</svg>

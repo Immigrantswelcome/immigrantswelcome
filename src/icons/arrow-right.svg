@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <g transform="translate(0.000000, 10.000000)" fill="none" stroke-width="2">
+        <polyline points="41.9494644 0.0626715473 63.625731 22.344802 41.9494644 43.4152047"></polyline>
+        <path d="M2.24561404,22.4561404 L60.6315789,22.4561404" stroke-linecap="square" transform="translate(30.690058, 22.456140) rotate(-180.000000) translate(-30.690058, -22.456140)"></path>
+    </g>
+</svg>
