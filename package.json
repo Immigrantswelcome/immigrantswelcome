@@ -7,7 +7,6 @@
     "clean_thumbnails": "rm dist/static/thumbs/*",
     "deploy": "./scripts/deploy",
     "icons": "./scripts/build_icons",
-    "prefix": "./scripts/prefix_css",
     "watch": "./scripts/watch"
   },
   "license": "ISC",

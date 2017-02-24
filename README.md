@@ -26,3 +26,15 @@ If you have an icon `twitter.svg` that is 64x64 pixels you can use it as follows
 Now, whenever you make a change to a CSS file it will show on the page without reloading the page.
 
 If you want to watch files outside of `static/css` for changes, add them to the `browser-sync` command in `scripts/watch`.
+
+# Clean thumbnails
+
+
+`npm run clean_thumbnails`
+
+
+# Building
+
+To build the site in the `dist` folder run:
+
+`npm run build`
