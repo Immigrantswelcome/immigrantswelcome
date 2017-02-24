@@ -24,9 +24,13 @@
     color: rgba(255,255,255,0.70);
 }
 
-.page-footer .footer__copyright {
+.page-footer .footer__copyright,
+.page-footer .footer__privacy {
     color: rgba(255,255,255,0.70);
     font-size: 14px;
+}
+
+.page-footer .footer__privacy {
     margin-bottom: 20px;
 }
 

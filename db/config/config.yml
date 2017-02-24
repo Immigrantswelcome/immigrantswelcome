@@ -1,0 +1,18 @@
+baseURL: https://immigrantswelcome.github.io/
+siteMetaTitle: Immigrants Welcome!
+campaignTitle: Immigrants Welcome!
+email: team@fightforthefuture.org
+pressEmail: press@fightforthefuture.org
+pressPhone: +1 (508) 368-3026
+copyright: A project of Fight for the Future. No copyright intended.
+privacy: >
+    We will deliver your signatures and stories to lawmakers, and  display your stories on this
+    site. Stories may be shared by visitors to the site over social media.  We will not share
+    your data with anyone else or contact you for any reason besides future campaigns.
+donateUrl: https://donate.fightforthefuture.org/
+facebookPage: https://www.facebook.com/fightfortheftr/
+# API
+signupIdentifier: 0
+storyIdenfifier: 0
+# dev
+DEBUG: false

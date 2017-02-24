@@ -408,6 +408,13 @@ env.addFilter('build_absolute_uri', path => {
     return `${config.baseURL}${path}`;
 });
 
+env.addFilter('lb2pr', str => {
+    if (str === null || str === undefined) {
+        return '';
+    }
+    return new nunjucks.runtime.SafeString(`<p>${str.replace(/\r\n|\n/g, '</p><p>')}</p>`);
+});
+
 // data
 
 function loadData(model, search="*", url=null) {
@@ -444,6 +451,10 @@ function loadData(model, search="*", url=null) {
 
 var config = loadData('config', null)();
 
+if (config.DEBUG) {
+    config.baseURL = 'http://localhost:3000';
+}
+
 // lets make the views
 function makeView(file, template, context) {
     var viewPath = path.join(DIST, file);
@@ -470,7 +481,9 @@ function url(view, page) {
 function featured(itemsFunc) {
     return () => {
         var items = itemsFunc();
-        items.sort((a, b) => a.featured !== b.featured);
+        if (items !== null) {
+            items.sort((a, b) => a.featured !== b.featured);
+        }
         return items;
     };
 }
@@ -520,7 +533,7 @@ Object.keys(views).forEach(view => {
 });
 
 if (! config.DEBUG) {
-    COMPRESS.forEach(name => {
+    Object.keys(COMPRESS).forEach(name => {
         var compress = COMPRESS[name];
 
         if ('css' in compress) {
@@ -563,6 +576,12 @@ promises.push(globby([path.join(SRC, '(images|icon_sprite)', '**', '*')]).then(p
 promises.push(fs.copy(
     path.join(SRC, 'html', 'robots.txt'),
     path.join(DIST, 'robots.txt'),
+    {preserveTimestamps:true}));
+
+// move jquery fallback to dist
+promises.push(fs.copy(
+    path.join(SRC, 'vendor', 'jquery'),
+    path.join(STATIC_ROOT, 'vendor', 'jquery'),
     {preserveTimestamps:true}));
 
 Promise.all(promises).then(() => {

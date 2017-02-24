@@ -11,21 +11,24 @@
         <div class="page-width-inner">
             <div class="hero">
                 <div class="hero__title">{{ page.heroTitle }}</div>
-                <div class="hero__text">{{ page.heroText }}</div>
+                <div class="hero__text richtext">{{ page.heroText | striptags | escape | lb2pr }}</div>
             </div>
             <div class="signup">
-                <form class="signup__form">
+                <form class="signup__form" action="https://actionnetwork.org/api/v2/forms/{{ config.signupIdentifier }}" method="post">
                     <div class="signup__form__group">
-                        <input id="id_name" name="name" type="text" placeholder="Your name" />
+                        <input id="id_name" name="given_name" type="text" placeholder="First name" />
                     </div>
                     <div class="signup__form__group">
-                        <input id="id_email" name="email" type="text" placeholder="Email" />
+                        <input id="id_name" name="family_name" type="text" placeholder="Last name" />
                     </div>
                     <div class="signup__form__group">
-                        <input id="id_zipcode" name="zipcode" type="text" placeholder="Zip code" />
+                        <input id="id_email" name="email_address" type="text" placeholder="Email" />
                     </div>
                     <div class="signup__form__group">
-                        <button name="sign">sign your name</button>
+                        <input id="id_zipcode" name="postal_code" type="text" placeholder="Zip code" />
+                    </div>
+                    <div class="signup__form__group">
+                        <button>{{ page.signButton }}</button>
                     </div>
                 </form>
             </div>
@@ -58,12 +61,12 @@
                         <use xlink:href="{% static 'icon_sprite/sprite.svg' %}#chevron-right"></use>
                     </svg>
                 </div>
-                <button class="stories__cta">add your story</button>
+                <button class="stories__cta">{{ page.storyButton }}</button>
             </div>
 
             <div class="logos">
                 <div class="logos__title">{{ page.logosTitle }}</div>
-                <div class="logos__text">{{ page.logosText }}</div>
+                <div class="logos__text richtext">{{ page.logosText | striptags | escape | lb2pr }}</div>
                 {% spaceless %}
                 {% for logo in logos() %}
                     {% if loop.first %}
@@ -85,13 +88,13 @@
             </div>
 
             <div class="actions">
-                <button class="actions__cta">join the campaign</button>
+                <button class="actions__cta">{{ page.logosButton }}</button>
                 <div class="actions__banner-enclosure">
                     <div class="actions__banner">
                     </div>
                 </div>
-                <div class="actions__help">Add this script right after the &lt;body&gt; tag. To see an example <a class="actions__help__link" href="">go here.</a></div>
-                <div class="actions__script">&lt;script src="https://fightforthefuture.github.io/immigration-is-america-banner/banner/rtn.js" async&gt;&lt;/script&gt;</div>
+                <div class="actions__help">Add this script right after the &lt;body&gt; tag. To see an example <a class="actions__help__link" href="{{ page.scriptExample }}">go here.</a></div>
+                <div class="actions__script">{{ page.scriptTag }}</div>
             </div>
         </div>
     </div>

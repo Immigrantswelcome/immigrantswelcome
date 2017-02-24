@@ -2,9 +2,15 @@
 
 set -o errexit -o nounset
 
-if [ "$TRAVIS_BRANCH" != "master" ]
+if [ "$TRAVIS_PULL_REQUEST" != "false" ]
 then
-  echo "This commit was made against the $TRAVIS_BRANCH and not the master! No deploy!"
+    echo "This is a PR and not a commit! No deploy!"
+    exit 0
+fi
+
+if [ "$TRAVIS_BRANCH" != "development" ]
+then
+  echo "This commit was made against the $TRAVIS_BRANCH and not the development! No deploy!"
   exit 0
 fi
 
@@ -13,19 +19,21 @@ rev=$(git rev-parse --short HEAD)
 cd dist
 
 git
-# need to setup a new user for building!
 git init
 git config user.name "immigrantswelcome-bot"
-git config user.email "immigrantswelcome-bot@fightforthefuture.com"
+git config user.email "immigrantswelcome-bot@users.noreply.github.com"
 
 git remote add upstream "https://$GH_TOKEN@github.com/immigrantswelcome/immigrantswelcome.github.io.git"
 git fetch upstream
-git reset upstream/gh-pages
+git reset upstream/master
 
 # any other build stuff?
 
 touch .
 
 git add -A .
-git commit -m "rebuild pages at ${rev}"
-git push -q upstream HEAD:gh-pages
+# lets test this first
+echo "commit"
+echo "push"
+#git commit -m "rebuild pages at ${rev}"
+#git push -q upstream HEAD:master

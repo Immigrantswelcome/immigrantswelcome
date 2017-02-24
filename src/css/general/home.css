@@ -298,6 +298,10 @@ body.home-page .page-content {
         font-weight: 500;
     }
 
+    body.home-page .actions__help__link:hover {
+        text-decoration: underline;
+    }
+
     body.home-page .actions__script {
         color: #FFF;
         background: #1E465F;

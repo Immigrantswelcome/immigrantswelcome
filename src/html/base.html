@@ -35,7 +35,7 @@
             <div class="page-width">
                 <div class="page-width-inner">
                     <div class="header">
-                        <a href="/"><img class="header__logo" src="{% static 'images/page-logo.svg' %}" alt="Immigration is America" /></a>
+                        <a class="header__text" href="/">{{ config.campaignTitle }}</a>
                     </div>
                 </div>
             </div>
@@ -55,8 +55,9 @@
                             <div class="footer__press__email">{{ config.pressEmail | obfuscate_email }}</div>
                             <div class="footer__press__phone"><a href="tel:{{ config.pressPhone }}">{{ config.pressPhone }}</a></div>
                         </div>
-                        <div class="footer__copyright">A project of Fight for the Future. No copyright intended.</div>
-                        <div class="footer__links"><a class="footer__links__link" href="{{ config.privacyUrl }}">Privacy Policy</a>|<a class="footer__links__link" href="{{ config.donateUrl }}">Donate</a>|{{ config.email | obfuscate_email("Email", "footer__links__link") }}</div>
+                        <div class="footer__copyright">{{ config.copyright }}</div>
+                        <div class="footer__privacy">{{ config.privacy }}</div>
+                        <div class="footer__links"><a class="footer__links__link" href="{{ config.donateUrl }}">Donate</a>|{{ config.email | obfuscate_email("Email", "footer__links__link") }}</div>
                     </div>
                 </div>
             </div>
@@ -74,6 +75,7 @@
         <script src="/static/vendor/svg4everybody/dist/svg4everybody.min.js"></script>
         <script src="/static/vendor/slick-carousel/slick/slick.min.js"></script>
         <script src="/static/vendor/autosize/dist/autosize.min.js"></script>
+        <script src="/static/vendor/jquery-osdi/jquery.osdi.min.js"></script>
 
         <script src="/static/js/lonely/scroll_reveal/scroll_reveal.js"></script>
 

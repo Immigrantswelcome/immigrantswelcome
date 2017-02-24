@@ -1,5 +1,4 @@
-# name of file MUST be 'homepage.yml'
-heroTitle: Immigration is America
+heroTitle: Immigrants Welcome!
 heroText: >
     President Trump wants us to believe immigrants are dangerous to our country, but we know
     better. We’re surrounded by immigrants, refugees, and people seeking a better life every day.
@@ -11,10 +10,10 @@ heroText: >
     Stand with us to show Washington that immigrants are welcome!—on DATE “Immigrants Welcome!”
     will deliver your signature to Congress and the White House alongside thousands of stories
     from American immigrants. Our stories will show policymakers the truth, we are not
-    afraid—immigrants are welcome!
+    afraid — immigrants are welcome!
 signButton: I AGREE
 storyButton: ADD YOUR STORY
-logosTitle: On DATE, we will join together, to say “immigrants Welcome!”
+logosTitle: On DATE, we will join together, to say “Immigrants Welcome!”
 logosText: >
     Immigrants are in danger. It’s time to defend our neighbors. On February 28th companies,
     websites, youtubers, faith groups, organizations, and individuals will come together to say
@@ -22,8 +21,12 @@ logosText: >
     Washington—with our own immigrant stories, and demand an end to attacks on immigrants and
     refugees.
 logosButton: JOIN THE CAMPAIGN
-scriptExample: https://fightforthefuture.github.io/example_banner/
-scriptTag: <script src="https://fightforthefuture.github.io/immigration-is-america-banner/banner/rtn.js" async></script>
+scriptExample: url here
+scriptTag: <script src="" async></script>
 #SEO
-metaDescription: Description of this page that will show up in search results
-metaKeywords: some keywords
+metaDescription: >
+    Stand with us to show Washington that immigrants are welcome!—on DATE “Immigrants Welcome!”
+    will deliver your signature to Congress and the White House alongside thousands of stories
+    from American immigrants. Our stories will show policymakers the truth, we are not
+    afraid—immigrants are welcome!
+metaKeywords: null

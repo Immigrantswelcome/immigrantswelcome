@@ -7,6 +7,8 @@
             return;
         }
 
+        $('.signup__form').osdi();
+
         var grid = document.querySelector('.logos__grid');
         if (grid !== null) {
             var extendButton = document.querySelector('.logos__grid-expand');

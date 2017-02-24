@@ -1,11 +1,12 @@
 # name of file MUST be 'config.yml'
 baseURL: http://immigrantswelcome.github.io
-siteMetaTitle: Immigration is America
+siteMetaTitle: Immigrants Welcome!
+campaignTitle: Immigrants Welcome!
 email: email@fightforthefuture.org
 pressEmail: press@fightforthefuture.org
-pressPhone: +1 508 474 5248
+pressPhone: null
 copyright: A project of Fight for the Future. No copyright intended.
-privacyUrl: https://www.fightforthefuture.org
+privacy: Privacy statement here
 donateUrl: https://www.fightforthefuture.org
 facebookPage: https://www.facebook.com/fightfortheftr/
 # API

@@ -6,6 +6,14 @@
     padding: 42px 0;
 }
 
+.page-header .header__text {
+    color: #FFFFFF;
+    font-weight: 900;
+    font-size: 18px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+
 .page-header .header__logo {
     width: 226px;
 }
