@@ -50,5 +50,7 @@ echo "git commit ${rev}"
 git commit -m "rebuild pages at ${rev}"
 
 # lets test this first
-echo "push"
-#git push -q upstream HEAD:master
+echo "git push"
+git push -q upstream HEAD:master
+
+echo "Commit deployed!"
