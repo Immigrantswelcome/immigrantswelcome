@@ -49,7 +49,6 @@ git status
 echo "git commit ${rev}"
 git commit -m "rebuild pages at ${rev}"
 
-# lets test this first
 echo "git push"
 git push -q upstream HEAD:master
 

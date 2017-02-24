@@ -565,7 +565,8 @@ if (! config.DEBUG) {
 }
 
 // move images to dist
-promises.push(globby([path.join(SRC, '(images|icon_sprite)', '**', '*')]).then(paths => {
+var imagePaths = [path.join(SRC, 'images', '**', '*'), path.join(SRC, 'icon_sprite', '**', '*')];
+promises.push(globby(imagePaths).then(paths => {
     paths.forEach(imagePath => {
         var newImagePath = imagePath.replace(SRC, STATIC_ROOT);
         fs.copySync(imagePath, newImagePath, {preserveTimestamps:true});

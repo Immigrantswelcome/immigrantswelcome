@@ -11,7 +11,7 @@
         <div class="page-width-inner">
             <div class="hero">
                 <div class="hero__title">{{ page.heroTitle }}</div>
-                <div class="hero__text richtext">{{ page.heroText | striptags | escape | lb2pr }}</div>
+                <div class="hero__text richtext">{{ page.heroText | striptags(true) | escape | lb2pr }}</div>
             </div>
             <div class="signup">
                 <form class="signup__form" action="https://actionnetwork.org/api/v2/forms/{{ config.signupIdentifier }}" method="post">
@@ -66,7 +66,7 @@
 
             <div class="logos">
                 <div class="logos__title">{{ page.logosTitle }}</div>
-                <div class="logos__text richtext">{{ page.logosText | striptags | escape | lb2pr }}</div>
+                <div class="logos__text richtext">{{ page.logosText | striptags(true) | escape | lb2pr }}</div>
                 {% spaceless %}
                 {% for logo in logos() %}
                     {% if loop.first %}
