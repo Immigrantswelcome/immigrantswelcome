@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "build": "./scripts/build",
+    "clean": "rm -rf dist/*",
     "clean_thumbnails": "rm dist/static/thumbs/*",
     "deploy": "./scripts/deploy",
     "icons": "./scripts/build_icons",

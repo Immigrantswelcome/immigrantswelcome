@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/immigrantswelcome/immigrantswelcome.github.io.svg?branch=development)](https://travis-ci.org/immigrantswelcome/immigrantswelcome.github.io)
+
 # Initial Setup
 
 `npm install`

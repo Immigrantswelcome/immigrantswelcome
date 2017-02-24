@@ -471,7 +471,8 @@ var htmlPaths = {
     'home': () => 'index.html',
     'story': story => {
         return `story/${story.pk}/${story.slug || slugify(story.title)}/index.html`
-    }
+    },
+    '404': () => '404.html'
 };
 
 function url(view, page) {
@@ -518,6 +519,9 @@ var views = {
             }
             makeView(htmlPaths.story(story), path.join('story', 'detail.html'), context);
         }
+    },
+    '404': () => {
+        makeView(htmlPaths['404'](), path.join('404.html'), {});
     }
 };
 
