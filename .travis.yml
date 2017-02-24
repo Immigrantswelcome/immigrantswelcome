@@ -4,7 +4,7 @@ install:
 script:
   - npm run build
 after_success:
-  - nvm run deploy
+  - npm run deploy
 env:
   global:
     - CXX=g++-4.8
