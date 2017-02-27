@@ -22,23 +22,9 @@ echo "working on ${rev}, moving into dist"
 cd dist
 
 # git
-echo "init git"
-git init
-echo "init git user"
+echo "set git user"
 git config user.name "immigrantswelcome-bot"
 git config user.email "immigrantswelcome-bot@users.noreply.github.com"
-
-echo "init git remote"
-git remote add upstream "https://$GH_TOKEN@github.com/immigrantswelcome/immigrantswelcome.github.io.git"
-echo "git fetch"
-git fetch upstream
-echo "git reset"
-git reset upstream/master
-
-# any other build stuff?
-
-echo "mark all as fresh"
-touch .
 
 echo "add all to git"
 git add -A .
@@ -50,6 +36,6 @@ echo "git commit ${rev}"
 git commit -m "rebuild pages at ${rev}"
 
 echo "git push"
-git push -q upstream HEAD:master
+#git push -q upstream HEAD:master
 
-echo "Commit deployed!"
+echo "testing: Commit deployed!"

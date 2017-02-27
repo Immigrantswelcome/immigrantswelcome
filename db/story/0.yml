@@ -1,5 +1,4 @@
-# filename MUST be a number not used i.e. 1.yml, 2.yml, 3.yml
-image: images/story/image1.jpg
+image: images/story/image0.jpg
 title: Title
 firstName: Miguel
 lastName: Martinez
@@ -27,7 +26,6 @@ text: >
     elit urna. Etiam venenatis eleifend urna eget scelerisque. Aliquam in nunc quis dui
     sollicitudin ornare ac vitae lectus.
 featured: no
-# SEO fields
 slug: null
 metaTitle: null
 metaDescription: null

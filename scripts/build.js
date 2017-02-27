@@ -87,7 +87,7 @@ var cssCompressor = postcss([
 
 
 // setup templates
-var env = new nunjucks.Environment(new nunjucks.FileSystemLoader('./src/html/'));
+var env = new nunjucks.Environment(new nunjucks.FileSystemLoader(path.join(SRC, 'html')));
 
 function StaticExtension() {
     this.tags = ['static'];
@@ -265,10 +265,32 @@ function SpacelessExtension() {
     };
 }
 
+function CommentExtension() {
+    this.tags = ['comment'];
+
+    this.parse = (parser, nodes, lexer) => {
+        var tok = parser.nextToken();
+
+        var args = parser.parseSignature(null, true);
+        parser.advanceAfterBlockEnd(tok.value);
+
+        var body = parser.parseUntilBlocks('endcomment');
+
+        parser.advanceAfterBlockEnd();
+
+        return new nodes.CallExtension(this, 'run', args, [body]);
+    };
+
+    this.run = (context, body) => {
+        return '';
+    };
+}
+
 env.addExtension('StaticExtension', new StaticExtension());
 env.addExtension('CompressExtension', new CompressExtension());
 env.addExtension('AutoprefixExtension', new AutoprefixExtension());
 env.addExtension('SpacelessExtension', new SpacelessExtension());
+env.addExtension('CommentExtension', new CommentExtension());
 
 env.addFilter('marked', str => new nunjucks.runtime.SafeString(marked(str)));
 
@@ -284,6 +306,9 @@ env.addFilter('strip_marked', str => {
 });
 
 env.addFilter('possessive', str => {
+    if (str === null || str === undefined) {
+        return '';
+    }
     if (str.endsWith('s')) {
         return `${str}'`;
     }
@@ -300,7 +325,11 @@ env.addFilter('thumbnail', (imageUrl, size, kwargs) => {
     var hash = md5(`${imageUrl}:${size}`);
     var name = `${hash}${path.extname(imageUrl)}`;
     var savePath = path.join(THUMBS_DEST_PATH, name);
-    if (! fs.existsSync(savePath)) {
+    var date = null;
+    if (fs.existsSync(savePath)) {
+        date = fs.lstatSync(savePath).mtime;
+    } else {
+        date = new Date();
         var imagePath = path.join(SRC, imageUrl);
         var image = sharp(imagePath);
 
@@ -340,7 +369,7 @@ env.addFilter('thumbnail', (imageUrl, size, kwargs) => {
             .toFile(savePath));
     }
 
-    return `${STATIC_URL}thumbs/${name}`;
+    return `${STATIC_URL}thumbs/${name}?v=${getTimestamp(date)}`;
 });
 
 var ObfuscateEmail = (() => {
@@ -412,7 +441,7 @@ env.addFilter('lb2pr', str => {
     if (str === null || str === undefined) {
         return '';
     }
-    return new nunjucks.runtime.SafeString(`<p>${str.replace(/\r\n|\n/g, '</p><p>')}</p>`);
+    return new nunjucks.runtime.SafeString(`<p>${str.replace(/(\r\n|\n)+/g, '</p><p>')}</p>`);
 });
 
 // data
@@ -455,8 +484,13 @@ if (config.DEBUG) {
     config.baseURL = 'http://localhost:3000';
 }
 
+if (config.baseURL[config.baseURL.length - 1] === '/') {
+    config.baseURL = config.baseURL.slice(0, -1);
+}
+
 // lets make the views
-function makeView(file, template, context) {
+var SITEMAP = [];
+function makeView(file, template, context, sitemap=true) {
     var viewPath = path.join(DIST, file);
     fs.mkdirsSync(path.dirname(viewPath), 0o755);
     var contents = env.render(template, Object.assign(
@@ -465,18 +499,21 @@ function makeView(file, template, context) {
         }
     ));
     fs.writeFileSync(viewPath, contents);
+    if (sitemap) {
+        SITEMAP.push('/' + file.replace('\\', '/').replace('index.html', ''));
+    }
 }
 
 var htmlPaths = {
     'home': () => 'index.html',
-    'story': story => {
-        return `story/${story.pk}/${story.slug || slugify(story.title)}/index.html`
-    },
+    'storyRedirect': story => path.join('story', story.pk, 'index.html'),
+    'story': story => path.join(
+        'story', story.pk, slugify(story.slug || story.title).val.slice(0, 50), 'index.html'),
     '404': () => '404.html'
 };
 
 function url(view, page) {
-    return `/${htmlPaths[view](page).replace('index.html', '')}`;
+    return '/' + htmlPaths[view](page).replace('\\', '/').replace('index.html', '');
 }
 
 function featured(itemsFunc) {
@@ -491,7 +528,9 @@ function featured(itemsFunc) {
 
 var views = {
     'home': () => {
-        var page = loadData('homepage', null);
+        var page = loadData('homepage', null, function() {
+            return url('home', this);
+        });
         var logos = loadData('logo', '+([0-9])');
         var stories = loadData('story', '+([0-9])', function() {
             return url('story', this);
@@ -503,6 +542,18 @@ var views = {
             stories: featured(stories)
         };
         makeView(htmlPaths.home(), path.join('general', 'home.html'), context);
+    },
+    'storyRedirect': () => {
+        var stories = loadData('story', '+([0-9])', function() {
+            return url('story', this);
+        })();
+        for (var i = 0, l = stories.length; i < l; ++i) {
+            var story = stories[i];
+            var context = {
+                redirect: story.url(),
+            };
+            makeView(htmlPaths.storyRedirect(story), path.join('redirect.html'), context, false);
+        }
     },
     'story': () => {
         var stories = loadData('story', '+([0-9])', function() {
@@ -521,9 +572,10 @@ var views = {
         }
     },
     '404': () => {
-        makeView(htmlPaths['404'](), path.join('404.html'), {});
+        makeView(htmlPaths['404'](), path.join('404.html'), {}, false);
     }
 };
+
 
 // needs to go before views are made
 if (config.DEBUG) {
@@ -532,10 +584,23 @@ if (config.DEBUG) {
     } catch(err) {};
 }
 
+
+//make views
 Object.keys(views).forEach(view => {
     views[view]();
 });
 
+
+//make sitemap
+var sitemapStr = ['<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'];
+SITEMAP.forEach(function(url) {
+    sitemapStr.push(`<url><loc>${config.baseURL}${url}</loc></url>`);
+});
+sitemapStr.push(`</urlset>`)
+promises.push(fs.writeFile(path.join(DIST, 'sitemap.xml'), sitemapStr.join('')));
+
+
+// compress statics
 if (! config.DEBUG) {
     Object.keys(COMPRESS).forEach(name => {
         var compress = COMPRESS[name];
@@ -563,7 +628,7 @@ if (! config.DEBUG) {
             var jsOpts = compress.js;
             var jsPaths = jsOpts.files;
             var result = uglifyJS.minify(jsPaths);
-            fs.writeFileSync(path.join(JS_DEST_PATH, `${jsOpts.name}.js`), result.code);
+            promises.push(fs.writeFile(path.join(JS_DEST_PATH, `${jsOpts.name}.js`), result.code));
         }
     });
 }
@@ -578,10 +643,8 @@ promises.push(globby(imagePaths).then(paths => {
 }));
 
 // move robots.txt to dist
-promises.push(fs.copy(
-    path.join(SRC, 'html', 'robots.txt'),
-    path.join(DIST, 'robots.txt'),
-    {preserveTimestamps:true}));
+var robotsStr = env.render('robots.txt', {config: config});
+promises.push(fs.writeFile(path.join(DIST, 'robots.txt'), robotsStr));
 
 // move jquery fallback to dist
 promises.push(fs.copy(

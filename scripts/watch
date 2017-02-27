@@ -1,7 +1,7 @@
 #!/bin/bash
 
-chokidar 'src/icons/*.svg' -c './scripts/build_icons' --initial &
-chokidar 'src/html/**/*.html' 'db/**/*' -c './scripts/build' --initial &
+chokidar 'src/icons/*.svg' -c 'npm run icons' --initial &
+chokidar 'src/html/**/*.html' 'db/**/*' -c 'npm run build' --initial &
 browser-sync start --no-online --no-open --no-ghost-mode --no-ui --no-notify --server "dist" --files \
     'src/css/**/*.css' \
     'src/images/**/*' \

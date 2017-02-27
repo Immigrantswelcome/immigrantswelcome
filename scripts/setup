@@ -1,0 +1,38 @@
+#!/bin/bash
+
+set -o errexit -o nounset
+
+if [ "$TRAVIS_PULL_REQUEST" != "false" ]
+then
+    echo "This is a PR and not a commit! No deployment setup!"
+    exit 0
+fi
+
+if [ "$TRAVIS_BRANCH" != "development" ]
+then
+  echo "This commit was made against the $TRAVIS_BRANCH and not the development! No deployment setup!"
+  exit 0
+fi
+
+echo "This commit is eligible for deployment setup."
+
+echo "git checkout master to dist"
+git clone -b master --single-branch "https://$GH_TOKEN@github.com/immigrantswelcome/immigrantswelcome.github.io.git" dist
+
+echo "Create slug redirects"
+node ./scripts/setup.js
+
+echo "Enter dist"
+cd dist
+
+echo "Reset mtimes for cache busting consistency"
+for FILE in $(git ls-files)
+do
+    unix_timestamp=$(git log -n 1 --pretty=format:%cd --date=iso -- $FILE | sed 's/-//g;s/ //;s/://;s/:/\./;s/ .*//')
+    touch -mt $unix_timestamp $FILE
+done
+
+echo "Reset cwd"
+cd ..
+
+echo "Deployment setup complete!"

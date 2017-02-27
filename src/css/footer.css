@@ -10,7 +10,8 @@
 
 .page-footer .footer__logo {
     margin-bottom: 40px;
-    width: 316px;
+    max-width: 316px;
+    width: 100%;
 }
 
 .page-footer .footer__press {

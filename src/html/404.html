@@ -12,14 +12,17 @@ permalink: /404.html
 
 {% block body_class %}error-page{% endblock %}
 
+
 {% block content %}
     <div class="page-width">
         <div class="page-width-inner">
             <div class="error">
                 <div class="error__title">Page not found</div>
                 <div class="error__text">We are sorry, the page you are looking for does not exist. You may have mistyped the address, or the page may have moved.</div>
-                <a class="error__escape button">Go to the Home page</a>
+                <a class="error__escape button" href="/">Go to the Home page</a>
             </div>
         </div>
     </div>
 {% endblock %}
+
+{% comment %}{% block overlays %}{% endblock %}{% endcomment %}

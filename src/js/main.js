@@ -1,11 +1,42 @@
 (function() {
 
+    autosize(document.querySelectorAll('textarea'));
+
     homePageInit();
+    storyPageInit();
 
     function homePageInit() {
         if (! document.querySelector('body').classList.contains('home-page')) {
             return;
         }
+
+        var heroTitle = document.querySelector('.hero__title');
+        ResponsiveText(heroTitle, {
+            relSize: 0.0633,
+            minSize: 38,
+            maxSize: 52
+        });
+
+        ResponsiveText(heroTitle, {
+            relSize: 0.0833,
+            minSize: 50,
+            maxSize: 64,
+            attribute: 'line-height'
+        });
+
+        var logosTitle = document.querySelector('.logos__title');
+        ResponsiveText(logosTitle, {
+            relSize: 0.0467,
+            minSize: 28,
+            maxSize: 36
+        });
+
+        ResponsiveText(logosTitle, {
+            relSize: 0.07,
+            minSize: 42,
+            maxSize: 56,
+            attribute: 'line-height'
+        });
 
         $('.signup__form').osdi();
 
@@ -63,6 +94,27 @@
             autoplay: true,
             prevArrow: '.stories__arrows__arrow--prev',
             nextArrow: '.stories__arrows__arrow--next'
+        });
+    }
+
+
+    function storyPageInit() {
+        if (! document.querySelector('body').classList.contains('story-page')) {
+            return;
+        }
+
+        var mainTitle = document.querySelector('.story__main__title');
+        ResponsiveText(mainTitle, {
+            relSize: 0.0633,
+            minSize: 32,
+            maxSize: 36
+        });
+
+        ResponsiveText(mainTitle, {
+            relSize: 0.0833,
+            minSize: 46,
+            maxSize: 56,
+            attribute: 'line-height'
         });
     }
 })();

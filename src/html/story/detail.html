@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block og_prefix %} prefix="article: http://ogp.me/ns/article#"{% endblock %}
+{% block og_prefix_extra %}article: http://ogp.me/ns/article#{% endblock %}
 
 {% block meta_title %}{{ page.metaTitle or page.title }}{% endblock %}
 {% block meta_description %}{{ page.metaDescription }}{% endblock %}
@@ -42,7 +42,7 @@
                 <div class="story__main">
                     <div class="story__main__title">{{ page.title }}</div>
                     <div class="story__main__details">
-                        <div class="story__main__details__name-from">{{ page.name }}, {{ page.from }}</div>
+                        <div class="story__main__details__name-from">{{ page.firstName }} {{ page.lastName }}, {{ page.from }}</div>
                         <div class="story__main__details__when">Immigrated in {{ page.immigratedIn }}</div>
                     </div>
                     <div class="story__main__text richtext">
@@ -60,16 +60,18 @@
                                 <use xlink:href="{% static 'icon_sprite/sprite.svg' %}#twitter"></use>
                             </svg>
                         </a>
-                        <a class="story__main__share__item story__main__share__item--logo" href="mailto:?subject={{ page.name | possessive | urlencode }}%20story&body={{ page.url() | build_absolute_uri }}">
+                        <a class="story__main__share__item story__main__share__item--logo" href="mailto:?subject={{ [page.firstName, page.lastName] | join(' ') | possessive | urlencode }}%20story&body={{ page.url() | build_absolute_uri }}">
                             <svg width="38" height="38">
                                 <use xlink:href="{% static 'icon_sprite/sprite.svg' %}#email"></use>
                             </svg>
                         </a>
                     </div>
+                    {% spaceless %}
                     <div class="story__main__actions">
-                        <button class="story__main__actions__action">add your story</button>
-                        <button class="story__main__actions__action button--reverse">join the campaign</button>
+                        <button class="story__main__actions__action">{{ config.storyPageStoryButton }}</button>
+                        <button class="story__main__actions__action button--reverse">{{ config.storyPageCampaignButton }}</button>
                     </div>
+                    {% endspaceless %}
                 </div>
             </div>
         </div>

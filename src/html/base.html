@@ -1,6 +1,6 @@
 {%- block front_matter -%}{%- endblock %}
 <!DOCTYPE html>
-<html lang="en"{% block og_prefix %}{% endblock %}>
+<html lang="en-US" prefix="og: http://ogp.me/ns# {% block og_prefix_extra %}{% endblock %}">
 <head>
     <title>{% block no_meta_title %}{% block meta_title %}{% endblock %} | {% endblock %}{{ config.siteMetaTitle }}</title>
     <meta property="og:site_name" content="{{ config.siteMetaTitle }}" />
@@ -64,6 +64,80 @@
                 </div>
             </div>
         </div>
+
+        {% comment %}
+        {% block overlays %}
+        <div class="overlay">
+            <svg class="overlay__close" width="14" height="14">
+                <use xlink:href="{% static 'icon_sprite/sprite.svg' %}#close"></use>
+            </svg>
+
+            <div class="overlay__story">
+                <div class="overlay__title">{{ config.storyTitle }}</div>
+                <form class="overlay__story__form" action="https://actionnetwork.org/api/v2/forms/{{ config.signupIdentifier }}" method="post">
+                    <div class="overlay__story__form__group">
+                        <input id="id_name" name="given_name" type="text" placeholder="First name" />
+                    </div>
+                    <div class="overlay__story__form__group">
+                        <input id="id_name" name="family_name" type="text" placeholder="Last name" />
+                    </div>
+                    <div class="overlay__story__form__group">
+                        <input id="id_email" name="email_address" type="text" placeholder="Email address" />
+                    </div>
+                    <div class="overlay__story__form__group">
+                        <input id="id_zipcode" name="postal_code" type="text" placeholder="Zip code" />
+                    </div>
+                    <div class="overlay__story__form__group">
+                        <input id="id_imigrate" name="custom[Year]" type="text" placeholder="Year of immigration" />
+                    </div>
+                    <div class="overlay__story__form__group">
+                        <input id="id_from" name="custom[Origin]" type="text" placeholder="Where did you or your family immigrate from?" />
+                    </div>
+                    <div class="overlay__story__form__group">
+                        <textarea id="id_from" name="custom[Why]" type="text" placeholder="What caused you or your family to immigrate to the United States? Please share with us a story about how immigrating to the US benefited your life. Consider starting with “I came to the United States…” or “My family came to the United States…”"></textarea>
+                    </div>
+                    <div class="overlay__story__form__group">
+                        <textarea id="id_from" name="custom[Photo]" type="text" placeholder="Add a link to a photo of you or members of your family who immigrated—consider imgur.com to host your image."></textarea>
+                    </div>
+                    <div class="overlay__story__form__group">
+                        <button>{{ config.storySubmit }}</button>
+                    </div>
+                </form>
+            </div>
+            <div class="overlay__campaign">
+                <div class="overlay__title">{{ config.signupTitle }}</div>
+                <form class="overlay__campaign__form" action="https://actionnetwork.org/api/v2/forms/{{ config.signupIdentifier }}" method="post">
+                    <div class="overlay__campaign__form__group">
+                        <input id="id_name" name="given_name" type="text" placeholder="First name" />
+                    </div>
+                    <div class="overlay__campaign__form__group">
+                        <input id="id_name" name="family_name" type="text" placeholder="Last name" />
+                    </div>
+                    <div class="overlay__campaign__form__group">
+                        <input id="id_email" name="email_address" type="text" placeholder="Email" />
+                    </div>
+                    <div class="overlay__campaign__form__group">
+                        <input id="id_zipcode" name="postal_code" type="text" placeholder="Zip code" />
+                    </div>
+                    <div class="overlay__campaign__form__group">
+                        <button>{{ page.signupSubmit }}</button>
+                    </div>
+                </form>
+            </div>
+            <div class="overlay__thanks">
+                <div class="overlay__title">{{ config.thanksTitle }}</div>
+                <div class="overlay__text">{{ config.thanksText }}</div>
+                <a class="button button--fb" href="#" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u={{ page.url() | build_absolute_uri }}','facebook-share-dialog','width=626,height=436');return false;">
+                    {{ config.thanksFBButton }}
+                </a>
+                <a class="button button--tw" href="#" onclick="window.open('https://twitter.com/intent/tweet?status={{ page.title }}+{{ page.url() | build_absolute_uri }}','twitter-share-dialog','width=626,height=436');return false;">
+                    {{ config.thanksTWButton }}
+                </a>
+                <button class="">{{ config.thanksStoryButton }}</button>
+            </div>
+        </div>
+        {% endblock %}
+        {% endcomment %}
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -79,7 +153,9 @@
         <script src="/static/vendor/autosize/dist/autosize.min.js"></script>
         <script src="/static/vendor/jquery-osdi/jquery.osdi.min.js"></script>
 
+        <script src="/static/js/jquery.tools.min.js"></script>
         <script src="/static/js/lonely/scroll_reveal/scroll_reveal.js"></script>
+        <script src="/static/js/lonely/responsive_text/responsive_text.js"></script>
 
         <script src="/static/js/main.js"></script>
     {% endcompress %}

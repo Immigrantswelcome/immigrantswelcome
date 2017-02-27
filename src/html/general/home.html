@@ -37,15 +37,15 @@
                 <div class="stories__slides">
                     {% for story in stories() %}
                         <div class="stories__slides__slide{% if not loop.first %} stories__slides__slide--hide-initial{% endif %}">
+                            <div class="stories__slides__slide__tease">“{{ story.text | strip_marked | truncate(51) }}”</div>
                             <div class="stories__slides__slide__image">
                                 <img class="stories__slides__slide__image__img" src="{{ story.image | thumbnail('1200x540') }}" />
                                 <div class="stories__slides__slide__image__gradient"></div>
                             </div>
-                            <div class="stories__slides__tease">“{{ story.text | strip_marked | truncate(51) }}”</div>
-                            <div class="stories__slides__name">
-                                <a class="stories__slides__name__link" href="{{ story.url() }}">
-                                    <span class="stories__slides__name__link__item stories__slides__name__link__item--text">read {{ story.name | possessive }} story</span>
-                                    <svg class="stories__slides__name__link__item stories__slides__name__link__item--icon" width="24" height="24">
+                            <div class="stories__slides__slide__name">
+                                <a class="stories__slides__slide__name__link" href="{{ story.url() }}">
+                                    <span class="stories__slides__slide__name__link__item stories__slides__slide__name__link__item--text">read {{ story.firstName | possessive }} story</span>
+                                    <svg class="stories__slides__slide__name__link__item stories__slides__slide__name__link__item--icon" width="24" height="24">
                                         <use xlink:href="{% static 'icon_sprite/sprite.svg' %}#arrow-right"></use>
                                     </svg>
                                 </a>

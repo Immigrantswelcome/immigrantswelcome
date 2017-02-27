@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "./scripts/build",
-    "clean": "rm -rf dist/*",
+    "build": "node ./scripts/build.js",
+    "clean": "rm -rf dist",
     "clean_thumbnails": "rm dist/static/thumbs/*",
     "deploy": "./scripts/deploy",
     "icons": "./scripts/build_icons",
+    "setup": "./scripts/setup",
     "watch": "./scripts/watch"
   },
   "license": "ISC",

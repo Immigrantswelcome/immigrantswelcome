@@ -10,7 +10,7 @@
 If you have an icon `twitter.svg` that is 64x64 pixels you can use it as follows:
 
 1. Put the SVG at `static/icons/twitter.svg`.
-2. Run `npm run build` to generate the SVG sprite. Alternatively, if `npm run watch` is running you can skip this step.
+2. Run `npm run icon` to generate the SVG sprite. Alternatively, if `npm run watch` is running you can skip this step.
 3. Include the icon in a template with:
 
 ```
