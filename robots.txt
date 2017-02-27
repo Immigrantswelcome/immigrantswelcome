@@ -1,3 +1,4 @@
+# TODO: remove next two lines and uncomment sitemap
 User-agent: *
 Disallow: /
-# Sitemap: ...
+# Sitemap: https://immigrantswelcome.github.io/sitemap.xml
