@@ -1,26 +1,17 @@
 # name of file MUST be 'homepage.yml'
-heroTitle: Immigration is America
+heroTitle: Immigrants Welcome!
 heroText: >
-    President Trump wants us to believe immigrants are dangerous to our country, but we know
-    better. We’re surrounded by immigrants, refugees, and people seeking a better life every day.
-    They are our neighbors, friends, classmates, and coworkers. We will not be divided by
-    religion or nationality, and we will not be silent when members of our community are
-    attacked. We stand against immigration policies based on hate and fear.
-
-
-    Stand with us to show Washington that immigrants are welcome!—on DATE “Immigrants Welcome!”
-    will deliver your signature to Congress and the White House alongside thousands of stories
-    from American immigrants. Our stories will show policymakers the truth, we are not
-    afraid—immigrants are welcome!
+    "President Trump wants us to believe immigrants are dangerous to our country, but we know
+    better. Immigrants are our neighbors, friends, classmates, and coworkers. We will not be
+    divided by religion or nationality we stand against immigration policies based on hate and fear.”
 signButton: I AGREE
 storyButton: ADD YOUR STORY
-logosTitle: On DATE, we will join together, to say “immigrants Welcome!”
+logosTitle: Together we can defend immigrants!
 logosText: >
-    Immigrants are in danger. It’s time to defend our neighbors. On February 28th companies,
-    websites, youtubers, faith groups, organizations, and individuals will come together to say
-    that “Immigrants are welcome here!” We’ll flood social media—and the desks of policymakers in
-    Washington—with our own immigrant stories, and demand an end to attacks on immigrants and
-    refugees.
+    Immigrants are in danger. It’s time to defend our neighbors. But we can't do it alone.
+    There are hundreds of organizations working tirelessly to support immigrants. Below
+    you'll find links to support immigrants rights organizations and learn about how you
+    can help immigrants in your community.
 logosButton: JOIN THE CAMPAIGN
 scriptExample: https://fightforthefuture.github.io/example_banner/
 scriptTag: <script src="https://fightforthefuture.github.io/immigration-is-america-banner/banner/rtn.js" async></script>
