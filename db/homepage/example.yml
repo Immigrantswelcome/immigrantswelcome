@@ -12,12 +12,6 @@ logosText: >
     There are hundreds of organizations working tirelessly to support immigrants. Below
     you'll find links to support immigrants rights organizations and learn about how you
     can help immigrants in your community.
-logosTitle: We are welcoming immigrants together.
-logosText: >
-    On February 28th companies, websites, youtubers, faith groups, civil society organizations,
-    and individuals will come together to say that “Immigrants are welcome here!” We’ll share
-    our stories on social media—and the desks of policymakers in Washington—to demand an end
-    to attacks on immigrants and refugees. Click the link below to join our campaign.
 logosButton: JOIN THE CAMPAIGN
 scriptExample: https://fightforthefuture.github.io/example_banner/
 scriptTag: <script src="https://fightforthefuture.github.io/immigration-is-america-banner/banner/rtn.js" async></script>
