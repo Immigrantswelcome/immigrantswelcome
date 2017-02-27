@@ -14,6 +14,7 @@
                 <div class="hero__text richtext">{{ page.heroText | striptags(true) | escape | lb2pr }}</div>
             </div>
             <div class="signup">
+                {% spaceless %}
                 <form class="signup__form" action="https://actionnetwork.org/api/v2/forms/{{ config.signupIdentifier }}" method="post">
                     <div class="signup__form__group">
                         <input id="id_name" name="given_name" type="text" placeholder="First name" />
@@ -31,6 +32,7 @@
                         <button>{{ page.signButton }}</button>
                     </div>
                 </form>
+                {% endspaceless %}
             </div>
 
             <div class="stories">
