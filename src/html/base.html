@@ -127,10 +127,10 @@
             <div class="overlay__thanks">
                 <div class="overlay__title">{{ config.thanksTitle }}</div>
                 <div class="overlay__text">{{ config.thanksText }}</div>
-                <a class="button button--fb" href="#" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u={{ page.url() | build_absolute_uri }}','facebook-share-dialog','width=626,height=436');return false;">
+                <a class="button button--fb" href="#" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u={{ page.url() | build_absolute_uri | urlencode }}','facebook-share-dialog','width=626,height=436');return false;">
                     {{ config.thanksFBButton }}
                 </a>
-                <a class="button button--tw" href="#" onclick="window.open('https://twitter.com/intent/tweet?status={{ page.title }}+{{ page.url() | build_absolute_uri }}','twitter-share-dialog','width=626,height=436');return false;">
+                <a class="button button--tw" href="#" onclick="window.open('https://twitter.com/intent/tweet?status={{ page.title | urlencode }}+{{ page.url() | build_absolute_uri | urlencode }}','twitter-share-dialog','width=626,height=436');return false;">
                     {{ config.thanksTWButton }}
                 </a>
                 <button class="">{{ config.thanksStoryButton }}</button>

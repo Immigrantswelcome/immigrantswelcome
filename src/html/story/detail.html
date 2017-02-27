@@ -6,10 +6,14 @@
 {% block meta_description %}{{ page.metaDescription }}{% endblock %}
 {% block meta_keywords %}{{ page.metaKeywords }}{% endblock %}
 
+{% set url = page.url() %}
+{% set abs_url = url | build_absolute_uri %}
+{% set abs_urlencode = abs_url | urlencode %}
+
 {% block head %}
     <meta property="og:title" content="{{ page.title }}" />
     <meta property="og:description" content="{{ page.text | strip_marked | truncate(255) }}" />
-    <meta property="og:url" content="{{ page.url() | build_absolute_uri }}" />
+    <meta property="og:url" content="{{ abs_url }}" />
     <meta property="og:image" content="{{ page.image | build_absolute_uri }}" />
     <meta property="og:type" content="article" />
     <meta property="article:publisher" content="{{ config.facebookPage }}" />
@@ -26,6 +30,7 @@
                     <div class="story__hero__image">
                         <img src="{{ page.image | thumbnail('784x480') }}" />
                     </div>
+                    {% if url !== prev %}
                     <div class="story__hero__arrows">
                         <a href="{{ prev }}">
                             <svg class="story__hero__arrows__arrow story__hero__arrows__arrow--prev" width="36" height="36">
@@ -38,6 +43,7 @@
                             </svg>
                         </a>
                     </div>
+                    {% endif %}
                 </div>
                 <div class="story__main">
                     <div class="story__main__title">{{ page.title }}</div>
@@ -50,17 +56,17 @@
                     </div>
                     <div class="story__main__share">
                         <div class="story__main__share__item story__main__share__item--label">share story:</div>
-                        <a class="story__main__share__item story__main__share__item--logo" href="#" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u={{ page.url() | build_absolute_uri }}','facebook-share-dialog','width=626,height=436');return false;">
+                        <a class="story__main__share__item story__main__share__item--logo" href="#" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u={{ abs_urlencode }}','facebook-share-dialog','width=626,height=436');return false;">
                             <svg width="38" height="38">
                                 <use xlink:href="{% static 'icon_sprite/sprite.svg' %}#facebook"></use>
                             </svg>
                         </a>
-                        <a class="story__main__share__item story__main__share__item--logo" href="#" onclick="window.open('https://twitter.com/intent/tweet?status={{ page.title }}+{{ page.url() | build_absolute_uri }}','twitter-share-dialog','width=626,height=436');return false;">
+                        <a class="story__main__share__item story__main__share__item--logo" href="#" onclick="window.open('https://twitter.com/intent/tweet?status={{ page.title | urlencode }}+{{ abs_urlencode }}','twitter-share-dialog','width=626,height=436');return false;">
                             <svg width="38" height="38">
                                 <use xlink:href="{% static 'icon_sprite/sprite.svg' %}#twitter"></use>
                             </svg>
                         </a>
-                        <a class="story__main__share__item story__main__share__item--logo" href="mailto:?subject={{ [page.firstName, page.lastName] | join(' ') | possessive | urlencode }}%20story&body={{ page.url() | build_absolute_uri }}">
+                        <a class="story__main__share__item story__main__share__item--logo" href="mailto:?subject={{ [page.firstName, page.lastName] | join(' ') | possessive | urlencode }}%20story&body={{ abs_urlencode }}">
                             <svg width="38" height="38">
                                 <use xlink:href="{% static 'icon_sprite/sprite.svg' %}#email"></use>
                             </svg>
