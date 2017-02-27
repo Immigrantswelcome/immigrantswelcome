@@ -25,7 +25,7 @@ var ResponsiveText = (function() {
 
     function ResponsiveText(element, options) {
         // act like a factory if called without new
-        if (this === window) {
+        if (this === window || typeof this === 'undefined') {
             var args = (arguments.length === 1 ? [arguments[0]] : Array.apply(null, arguments));
             return new (Function.prototype.bind.apply(ResponsiveText, [null].concat(args)));
         }

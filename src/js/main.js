@@ -85,16 +85,24 @@
             });
         }
 
-        $('.stories__slides').on('init', function(slick) {
-            var slides = this.querySelectorAll('.stories__slides__slide');
-            slides.forEach(function(slide) {
-                slide.style.display = 'block';
+        var $slides = $('.stories__slides');
+
+        if ($slides.length > 1) {
+            $slides.on('init', function(slick) {
+                var slides = this.querySelectorAll('.stories__slides__slide');
+                slides.forEach(function(slide) {
+                    slide.style.display = 'block';
+                });
+            }).slick({
+                autoplay: true,
+                prevArrow: '.stories__arrows__arrow--prev',
+                nextArrow: '.stories__arrows__arrow--next'
             });
-        }).slick({
-            autoplay: true,
-            prevArrow: '.stories__arrows__arrow--prev',
-            nextArrow: '.stories__arrows__arrow--next'
-        });
+        } else {
+            document.querySelectorAll('.stories__arrows__arrow').forEach(function(element) {
+                element.style.display = 'none';
+            });
+        }
     }
 
 

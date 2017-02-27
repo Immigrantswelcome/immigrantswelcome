@@ -4,7 +4,7 @@ Text that sizes automatically based on parent width.
 
 # Version
 
-2.0.0
+2.0.1
 
 # Usage
 
