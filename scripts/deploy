@@ -36,6 +36,6 @@ echo "git commit ${rev}"
 git commit -m "rebuild pages at ${rev}"
 
 echo "git push"
-git push -q upstream HEAD:master
+git push -q origin HEAD:master
 
 echo "Commit deployed!"
