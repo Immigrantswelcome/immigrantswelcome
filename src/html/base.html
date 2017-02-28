@@ -22,6 +22,7 @@
             <link rel="stylesheet" type="text/css" href="/static/css/footer.css" />
             <link rel="stylesheet" type="text/css" href="/static/css/form.css" />
             <link rel="stylesheet" type="text/css" href="/static/css/error.css" />
+            <link rel="stylesheet" type="text/css" href="/static/css/overlay.css" />
 
             <link rel="stylesheet" type="text/css" href="/static/css/general/home.css" />
             <link rel="stylesheet" type="text/css" href="/static/css/story/detail.css" />
@@ -65,39 +66,38 @@
             </div>
         </div>
 
-        {% comment %}
         {% block overlays %}
-        <div class="overlay">
+        <div id="overlay" class="overlay">
             <svg class="overlay__close" width="14" height="14">
                 <use xlink:href="{% static 'icon_sprite/sprite.svg' %}#close"></use>
             </svg>
 
             <div class="overlay__story">
                 <div class="overlay__title">{{ config.storyTitle }}</div>
-                <form class="overlay__story__form" action="https://actionnetwork.org/api/v2/forms/{{ config.signupIdentifier }}" method="post">
+                <form class="overlay__story__form" action="https://actionnetwork.org/api/v2/forms/{{ config.signupIdentifier }}/submissions" method="post">
                     <div class="overlay__story__form__group">
-                        <input id="id_name" name="given_name" type="text" placeholder="First name" />
+                        <input id="id_name" name="given_name" type="text" placeholder="{{ config.storyPlaceholderFirstName }}" />
                     </div>
                     <div class="overlay__story__form__group">
-                        <input id="id_name" name="family_name" type="text" placeholder="Last name" />
+                        <input id="id_name" name="family_name" type="text" placeholder="{{ config.storyPlaceholderLastName }}" />
                     </div>
                     <div class="overlay__story__form__group">
-                        <input id="id_email" name="email_address" type="text" placeholder="Email address" />
+                        <input id="id_email" name="email_address" type="text" placeholder="{{ config.storyPlaceholderEmail }}" />
                     </div>
                     <div class="overlay__story__form__group">
-                        <input id="id_zipcode" name="postal_code" type="text" placeholder="Zip code" />
+                        <input id="id_zipcode" name="postal_code" type="text" placeholder="{{ config.storyPlaceholderZip }}" />
                     </div>
                     <div class="overlay__story__form__group">
-                        <input id="id_imigrate" name="custom[Year]" type="text" placeholder="Year of immigration" />
+                        <input id="id_imigrate" name="custom[Year]" type="text" placeholder="{{ config.storyPlaceholderYear }}" />
                     </div>
                     <div class="overlay__story__form__group">
-                        <input id="id_from" name="custom[Origin]" type="text" placeholder="Where did you or your family immigrate from?" />
+                        <input id="id_from" name="custom[Origin]" type="text" placeholder="{{ config.storyPlaceholderOrigin }}" />
                     </div>
                     <div class="overlay__story__form__group">
-                        <textarea id="id_from" name="custom[Why]" type="text" placeholder="What caused you or your family to immigrate to the United States? Please share with us a story about how immigrating to the US benefited your life. Consider starting with “I came to the United States…” or “My family came to the United States…”"></textarea>
+                        <textarea id="id_from" name="custom[Why]" type="text" placeholder="{{ config.storyPlaceholderWhy }}"></textarea>
                     </div>
                     <div class="overlay__story__form__group">
-                        <textarea id="id_from" name="custom[Photo]" type="text" placeholder="Add a link to a photo of you or members of your family who immigrated—consider imgur.com to host your image."></textarea>
+                        <textarea id="id_from" name="custom[Photo]" type="text" placeholder="{{ config.storyPlaceholderPhoto }}"></textarea>
                     </div>
                     <div class="overlay__story__form__group">
                         <button>{{ config.storySubmit }}</button>
@@ -127,17 +127,25 @@
             <div class="overlay__thanks">
                 <div class="overlay__title">{{ config.thanksTitle }}</div>
                 <div class="overlay__text">{{ config.thanksText }}</div>
-                <a class="button button--fb" href="#" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u={{ page.url() | build_absolute_uri | urlencode }}','facebook-share-dialog','width=626,height=436');return false;">
-                    {{ config.thanksFBButton }}
-                </a>
-                <a class="button button--tw" href="#" onclick="window.open('https://twitter.com/intent/tweet?status={{ page.title | urlencode }}+{{ page.url() | build_absolute_uri | urlencode }}','twitter-share-dialog','width=626,height=436');return false;">
-                    {{ config.thanksTWButton }}
-                </a>
-                <button class="">{{ config.thanksStoryButton }}</button>
+                <div class="overlay__thanks__buttons">
+                    <a class="overlay__thanks__buttons__button button button--fb" href="#" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u={{ page.url() | build_absolute_uri | urlencode }}','facebook-share-dialog','width=626,height=436');return false;">
+                        <svg class="overlay__thanks__buttons__button__icon" width="16" height="16">
+                            <use xlink:href="{% static 'icon_sprite/sprite.svg' %}#facebook-large"></use>
+                        </svg>
+                        {{ config.thanksFBButton }}
+                    </a>
+                    <a class="overlay__thanks__buttons__button button button--tw" href="#" onclick="window.open('https://twitter.com/intent/tweet?status={{ page.title | urlencode }}+{{ page.url() | build_absolute_uri | urlencode }}','twitter-share-dialog','width=626,height=436');return false;">
+                        <svg class="overlay__thanks__buttons__button__icon" width="16" height="16">
+                            <use xlink:href="{% static 'icon_sprite/sprite.svg' %}#twitter-large"></use>
+                        </svg>
+                        {{ config.thanksTWButton }}
+                    </a>
+                </div>
+                <button class="overlay__thanks__story button--gray">{{ config.thanksStoryButton }}</button>
             </div>
         </div>
+        <div id="overlay_trigger" rel="#overlay"></div>
         {% endblock %}
-        {% endcomment %}
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>

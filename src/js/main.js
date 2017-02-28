@@ -38,7 +38,30 @@
             attribute: 'line-height'
         });
 
-        $('.signup__form').osdi();
+        var $overlay = $('#overlay');
+
+        var $overlayTrigger = $('#overlay_trigger');
+        $overlayTrigger.overlay({
+            close: '.overlay__close',
+            mask: {
+                color: '#000',
+                opacity: 0.4
+            },
+            onClose: function() {
+                signupThanks.classList.remove('overlay__thanks--show');
+            }
+        });
+        var signupThanks = document.querySelector('.overlay__thanks');
+
+        $('.signup__form').osdi({
+            done: function(data, textStatus, jqXHR) {
+                signupThanks.classList.add('overlay__thanks--show');
+                $overlayTrigger.click();
+            },
+            fail: function(jqXHR, textStatus, errorThrown) {
+                //TODO: console.log('fail');
+            }
+        });
 
         var grid = document.querySelector('.logos__grid');
         if (grid !== null) {

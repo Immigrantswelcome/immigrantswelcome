@@ -15,18 +15,18 @@
             </div>
             <div class="signup">
                 {% spaceless %}
-                <form class="signup__form" action="https://actionnetwork.org/api/v2/forms/{{ config.signupIdentifier }}" method="post">
+                <form class="signup__form" action="https://actionnetwork.org/api/v2/forms/{{ config.signupIdentifier }}/submissions" method="post">
                     <div class="signup__form__group">
-                        <input id="id_name" name="given_name" type="text" placeholder="First name" />
+                        <input id="id_name" name="given_name" type="text" placeholder="{{ config.signupPlaceholderFirstName }}" />
                     </div>
                     <div class="signup__form__group">
-                        <input id="id_name" name="family_name" type="text" placeholder="Last name" />
+                        <input id="id_name" name="family_name" type="text" placeholder="{{ config.signupPlaceholderLastName }}" />
                     </div>
                     <div class="signup__form__group">
-                        <input id="id_email" name="email_address" type="text" placeholder="Email" />
+                        <input id="id_email" name="email_address" type="text" placeholder="{{ config.signupPlaceholderEmail }}" />
                     </div>
                     <div class="signup__form__group">
-                        <input id="id_zipcode" name="postal_code" type="text" placeholder="Zip code" />
+                        <input id="id_zipcode" name="postal_code" type="text" placeholder="{{ config.signupPlaceholderZip }}" />
                     </div>
                     <div class="signup__form__group">
                         <button>{{ page.signButton }}</button>
