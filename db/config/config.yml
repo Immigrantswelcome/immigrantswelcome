@@ -21,11 +21,28 @@ storyTitle: Add your story
 storySubmit: add your story
 signupTitle: Join the campaign
 signupSubmit: join the campaign
+# form placeholders
+signupPlaceholderFirstName: First name
+signupPlaceholderLastName: Last name
+signupPlaceholderEmail: Email
+signupPlaceholderZip: Zip code
+storyPlaceholderFirstName: First name
+storyPlaceholderLastName: Last name
+storyPlaceholderEmail: Email address
+storyPlaceholderZip: Zip code
+storyPlaceholderYear: Year of immigration
+storyPlaceholderOrigin: Where did you or your family immigrate from?
+storyPlaceholderWhy: >
+    Tell us the story of why you or your family immigrated to the United States? Consider
+    starting with “I came to the United States…” or “My family came to the United States…”
+storyPlaceholderPhoto: >
+    Add a link to a photo of you or members of your family who immigrated—consider imgur.com to
+    host your image.
 # story page buttons
 storyPageStoryButton: add your story
 storyPageCampaignButton: join the campaign
 # API
-signupIdentifier: 0
-storyIdenfifier: 0
+signupIdentifier: a43b0829-911a-4b92-b202-066e22757394
+storyIdenfifier: 219b17bd-1746-4bc1-ab28-8632af8ceabf
 # dev
 DEBUG: false

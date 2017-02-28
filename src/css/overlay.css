@@ -1,0 +1,100 @@
+.overlay {
+    box-sizing: border-box;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.50);
+    border-radius: 4px;
+    display: none;
+    background: #fff;
+    padding: 60px;
+    max-width: 616px;
+}
+
+.overlay__close {
+    position: absolute;
+    cursor: pointer;
+    right: 20px;
+    top: 20px;
+    transition: transform 0.3s;
+    transform: scale(1);
+}
+
+.overlay__close:hover {
+    transform: scale(1.2);
+}
+
+.overlay__story {
+    display: none;
+}
+
+.overlay__title {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 40px;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    width: 300px;
+}
+
+.overlay__text {
+    font-size: 16px;
+    color: rgba(0,0,0,0.54);
+    line-height: 28px;
+    margin-bottom: 20px;
+}
+
+.overlay__story__form {
+
+}
+
+.overlay__story__form__group {
+
+}
+
+.overlay__campaign {
+    display: none;
+}
+
+.overlay__campaign__form {
+
+}
+
+.overlay__campaign__form__group {
+
+}
+
+.overlay__thanks {
+    display: none;
+}
+
+.overlay__thanks--show {
+    display: block;
+}
+
+
+.overlay__thanks__buttons {
+    margin-bottom: 44px;
+}
+
+.overlay__thanks__buttons__button {
+    position: relative;
+    display: inline-block;
+}
+
+.overlay__thanks__buttons__button:first-child {
+    margin-right: 10px;
+}
+
+.overlay__thanks__buttons__button__icon {
+    fill: #FFF;
+    position: absolute;
+    left: 24px;
+}
+
+.overlay__thanks__story {
+    width: 100%;
+}
+
+#overlay_trigger {
+    display: none;
+}
