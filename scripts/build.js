@@ -662,6 +662,10 @@ promises.push(globby(imagePaths).then(paths => {
     });
 }));
 
+promises.push(fs.copySync(
+    path.join(SRC, 'images', 'favicons', 'favicon.ico'),
+    path.join(DIST, 'favicon.ico'), {preserveTimestamps:true}))
+
 // clean thumbnails
 promises.push(globby(path.join(THUMBS_DEST_PATH, '*')).then(paths => {
     paths.forEach(thumbPath => {
