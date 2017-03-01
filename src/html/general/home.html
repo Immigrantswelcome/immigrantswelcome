@@ -14,44 +14,48 @@
                 <div class="hero__text richtext">{{ page.heroText | striptags(true) | escape | lb2pr }}</div>
             </div>
             <div class="signup">
-                {% spaceless %}
-                <form class="signup__form" action="https://actionnetwork.org/api/v2/forms/{{ config.signupIdentifier }}" method="post">
+                {% spaceless -%}
+                <form class="signup__form" action="https://actionnetwork.org/api/v2/forms/{{ config.signupIdentifier }}/submissions" method="post">
+                    <div class="signup__form__error form__general-error">Something went wrong!<br>Please try again in a few minutes.</div>
                     <div class="signup__form__group">
-                        <input id="id_name" name="given_name" type="text" placeholder="First name" />
+                        <input id="id_name" name="given_name" type="text" placeholder="{{ config.signupPlaceholderFirstName }}" required="required" />
                     </div>
                     <div class="signup__form__group">
-                        <input id="id_name" name="family_name" type="text" placeholder="Last name" />
+                        <input id="id_name" name="family_name" type="text" placeholder="{{ config.signupPlaceholderLastName }}" required="required" />
                     </div>
                     <div class="signup__form__group">
-                        <input id="id_email" name="email_address" type="text" placeholder="Email" />
+                        <input id="id_email" name="email_address" type="email" placeholder="{{ config.signupPlaceholderEmail }}" required="required" />
                     </div>
                     <div class="signup__form__group">
-                        <input id="id_zipcode" name="postal_code" type="text" placeholder="Zip code" />
+                        <input id="id_zipcode" name="postal_code" type="text" placeholder="{{ config.signupPlaceholderZip }}" required="required" minlength="5" data-parsley-type="digits" />
                     </div>
                     <div class="signup__form__group">
-                        <button>{{ page.signButton }}</button>
+                        <button type="submit">{{ page.signButton }}</button>
                     </div>
                 </form>
-                {% endspaceless %}
+                {%- endspaceless %}
+                <div class="signup__disclaimer">{{ config.signupDisclaimer }}</div>
             </div>
 
             <div class="stories">
                 <div class="stories__slides">
                     {% for story in stories() %}
                         <div class="stories__slides__slide{% if not loop.first %} stories__slides__slide--hide-initial{% endif %}">
-                            <div class="stories__slides__slide__tease">“{{ story.text | strip_marked | truncate(51) }}”</div>
-                            <div class="stories__slides__slide__image">
-                                <img class="stories__slides__slide__image__img" src="{{ story.image | thumbnail('1200x540') }}" />
-                                <div class="stories__slides__slide__image__gradient"></div>
-                            </div>
-                            <div class="stories__slides__slide__name">
-                                <a class="stories__slides__slide__name__link" href="{{ story.url() }}">
-                                    <span class="stories__slides__slide__name__link__item stories__slides__slide__name__link__item--text">read {{ story.firstName | possessive }} story</span>
-                                    <svg class="stories__slides__slide__name__link__item stories__slides__slide__name__link__item--icon" width="24" height="24">
-                                        <use xlink:href="{% static 'icon_sprite/sprite.svg' %}#arrow-right"></use>
-                                    </svg>
-                                </a>
-                            </div>
+                            <a href="{{ story.url() }}">
+                                <div class="stories__slides__slide__tease">“{{ story.text | strip_marked | truncate(51) }}”</div>
+                                <div class="stories__slides__slide__image">
+                                    <img class="stories__slides__slide__image__img" src="{{ story.image | thumbnail('1200x540') }}" />
+                                    <div class="stories__slides__slide__image__gradient"></div>
+                                </div>
+                                <div class="stories__slides__slide__name">
+                                    <div class="stories__slides__slide__name__link">
+                                        <span class="stories__slides__slide__name__link__item stories__slides__slide__name__link__item--text">read {{ story.firstName | possessive }} story</span>
+                                        <svg class="stories__slides__slide__name__link__item stories__slides__slide__name__link__item--icon" width="24" height="24">
+                                            <use xlink:href="{% static 'icon_sprite/sprite.svg' %}#arrow-right"></use>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
                     {% endfor %}
                 </div>
@@ -69,30 +73,31 @@
             <div class="logos">
                 <div class="logos__title">{{ page.logosTitle }}</div>
                 <div class="logos__text richtext">{{ page.logosText | striptags(true) | escape | lb2pr }}</div>
-                {% spaceless %}
-                {% for logo in logos() %}
-                    {% if loop.first %}
+                {% spaceless -%}
+                {% for logo in logos() -%}
+                    {% if loop.first -%}
                         <div class="logos__grid">
-                    {% endif %}
+                    {%- endif %}
                             <div class="logos__grid__logo">
                                 <img class="logos__grid__logo__img" src="{{ logo.url | thumbnail('155x63', area=4000) }}" alt="{{ logo.alt }}" />
                             </div>
-                    {% if loop.last %}
+                    {% if loop.last -%}
                         </div>
                         <div class="logos__grid-expand">
                             <svg class="logos__grid-expand__logo" width="40" height="40">
                                 <use xlink:href="{% static 'icon_sprite/sprite.svg' %}#view-all"></use>
                             </svg>
                         </div>
-                    {% endif %}
-                {% endfor %}
-                {% endspaceless %}
+                    {%- endif %}
+                {%- endfor %}
+                {%- endspaceless %}
             </div>
 
             <div class="actions">
-                <button class="actions__cta">{{ page.logosButton }}</button>
+                {{ config.joinCTAURL | obfuscate_email(page.logosButton, "actions__cta button") }}
                 <div class="actions__banner-enclosure">
                     <div class="actions__banner">
+                        <iframe src="{{ '/banner/' | build_absolute_uri }}" height="148"></iframe>
                     </div>
                 </div>
                 <div class="actions__help">Add this script right after the &lt;body&gt; tag. To see an example <a class="actions__help__link" href="{{ page.scriptExample }}">go here.</a></div>

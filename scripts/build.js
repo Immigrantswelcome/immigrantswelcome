@@ -67,11 +67,13 @@ var cssAutoprefixer = postcss([
     autoprefixer({ add: false, browsers: [] }),
     autoprefixer({
         browsers: [
-            "last 2 version",
-            "> 1%",
-            "not ie < 11",
-            "not last 2 ie_mob versions",
-            "not last 2 bb versions"
+            "last 2 Chrome version",
+            "last 2 Firefox version",
+            "last 1 Safari version",
+            "last 1 Edge version",
+            "IE >= 11",
+            "last 1 ChromeAndroid version",
+            "last 2 iOS version"
         ]
     })
 ]);
@@ -315,6 +317,8 @@ env.addFilter('possessive', str => {
     return `${str}'s`;
 });
 
+var THUMBS = new Set();
+
 env.addFilter('thumbnail', (imageUrl, size, kwargs) => {
     var area = typeof kwargs === 'undefined' ? null : kwargs.area || null;
     var sizes = size.split('x');
@@ -368,6 +372,8 @@ env.addFilter('thumbnail', (imageUrl, size, kwargs) => {
             .withoutEnlargement()
             .toFile(savePath));
     }
+
+    THUMBS.add(savePath);
 
     return `${STATIC_URL}thumbs/${name}?v=${getTimestamp(date)}`;
 });
@@ -444,6 +450,16 @@ env.addFilter('lb2pr', str => {
     return new nunjucks.runtime.SafeString(`<p>${str.replace(/(\r\n|\n)+/g, '</p><p>')}</p>`);
 });
 
+env.addFilter('image_metadata', imageUrl => {
+    var imagePath = path.join(SRC, imageUrl);
+    var image = sharp(imagePath);
+    var metadata = null;
+    image.metadata().then(res => {
+        metadata = res;
+    });
+    deasync.loopWhile(() => metadata === null);
+    return metadata;
+});
 // data
 
 function loadData(model, search="*", url=null) {
@@ -509,7 +525,8 @@ var htmlPaths = {
     'storyRedirect': story => path.join('story', story.pk, 'index.html'),
     'story': story => path.join(
         'story', story.pk, slugify(story.slug || story.title).val.slice(0, 50), 'index.html'),
-    '404': () => '404.html'
+    '404': () => '404.html',
+    'banner': () => path.join('banner', 'index.html')
 };
 
 function url(view, page) {
@@ -573,6 +590,9 @@ var views = {
     },
     '404': () => {
         makeView(htmlPaths['404'](), path.join('404.html'), {}, false);
+    },
+    'banner': () => {
+        makeView(htmlPaths.banner(), path.join('general', 'banner.html'), {}, false);
     }
 };
 
@@ -642,6 +662,23 @@ promises.push(globby(imagePaths).then(paths => {
     });
 }));
 
+// favicon stuff
+promises.push(fs.copySync(
+    path.join(SRC, 'images', 'favicons', 'favicon.ico'),
+    path.join(DIST, 'favicon.ico'), {preserveTimestamps:true}))
+promises.push(fs.copySync(
+    path.join(SRC, 'images', 'favicons', 'browserconfig.xml'),
+    path.join(DIST, 'browserconfig.xml'), {preserveTimestamps:true}))
+
+// clean thumbnails
+promises.push(globby(path.join(THUMBS_DEST_PATH, '*')).then(paths => {
+    paths.forEach(thumbPath => {
+        if (! THUMBS.has(thumbPath)) {
+            fs.remove(thumbPath);
+        }
+    });
+}));
+
 // move robots.txt to dist
 var robotsStr = env.render('robots.txt', {config: config});
 promises.push(fs.writeFile(path.join(DIST, 'robots.txt'), robotsStr));
@@ -653,7 +690,7 @@ promises.push(fs.copy(
     {preserveTimestamps:true}));
 
 Promise.all(promises).then(() => {
-    fs.remove(BUILD);
+    fs.removeSync(BUILD);
 
     if (! config.DEBUG) {
         fs.mkdirsSync(DEBUG_SRC_PATH);

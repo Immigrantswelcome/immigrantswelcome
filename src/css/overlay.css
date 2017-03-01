@@ -1,0 +1,134 @@
+.overlay {
+    box-sizing: border-box;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.50);
+    border-radius: 4px;
+    display: none;
+    background: #fff;
+    padding: 60px;
+    max-width: 616px;
+}
+
+.overlay__close {
+    position: absolute;
+    cursor: pointer;
+    right: 20px;
+    top: 20px;
+    transition: transform 0.3s;
+    transform: scale(1);
+}
+
+.overlay__close:hover {
+    transform: scale(1.2);
+}
+
+.overlay__title {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 40px;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    width: 300px;
+}
+
+.overlay__text {
+    font-size: 16px;
+    color: rgba(0,0,0,0.54);
+    line-height: 28px;
+    margin-bottom: 20px;
+}
+
+.overlay__story {
+    display: none;
+    opacity: 1;
+    transition: opacity 0.3s;
+}
+
+.overlay__story--show {
+    display: block;
+}
+
+.overlay__story--hide {
+    opacity: 0;
+}
+
+.overlay__story__form__group {
+    margin-bottom: 10px;
+}
+
+.overlay__story__form__group .parsley-errors-list {
+    max-width: none;
+}
+
+.overlay__story__form__group--one-third,
+.overlay__story__form__group--two-third,
+.overlay__story__form__group--one-half {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.overlay__story__form__group--one-third + .overlay__story__form__group--two-third,
+.overlay__story__form__group--two-third + .overlay__story__form__group--one-third,
+.overlay__story__form__group--one-half + .overlay__story__form__group--one-half {
+    margin-left: 10px;
+}
+
+.overlay__story__form__group--one-half {
+    width: calc(50% - 5px);
+}
+
+.overlay__story__form__group--one-third {
+    width: calc(33.3333% - 5px);
+}
+
+.overlay__story__form__group--two-third {
+    width: calc(66.6666% - 5px);
+}
+
+.overlay__story__disclaimer {
+    color: rgba(0,0,0,0.7);
+    font-size: 14px;
+    max-width: 500px;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.overlay__thanks {
+    display: none;
+    opacity: 1;
+    transition: opacity 0.3s;
+}
+
+.overlay__thanks--show {
+    display: block;
+}
+
+.overlay__thanks--hide {
+    opacity: 0;
+}
+
+.overlay__thanks--signup .overlay__thanks__buttons {
+    margin-bottom: 44px;
+}
+
+.overlay__thanks__buttons__button {
+    position: relative;
+    display: inline-block;
+}
+
+.overlay__thanks__buttons__button:first-child {
+    margin-right: 10px;
+}
+
+.overlay__thanks__buttons__button__icon {
+    fill: #FFF;
+    position: absolute;
+    left: 24px;
+}
+
+#overlay_trigger {
+    display: none;
+}

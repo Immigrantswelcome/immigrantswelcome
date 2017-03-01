@@ -1,0 +1,52 @@
+html, body {
+    overflow: hidden;
+}
+
+.page-wrapper {
+    min-height: 0;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+body.banner-page .page-content {
+    background: #1E465F;
+}
+
+.banner {
+    display: flex;
+    height: 100px;
+}
+
+.banner__image {
+    margin-right: 24px;
+}
+
+.banner__text {
+    color: #FFF;
+    padding: 26px 0;
+}
+
+.banner__headline {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 24px;
+    margin-bottom: 8px;
+}
+
+.banner__subheadline {
+    font-size: 14px;
+    line-height: 16px;
+}
+
+.banner__spacer {
+    flex-grow: 1;
+}
+
+.banner__link {
+    height: 48px;
+    margin: 26px 0
+}
+

@@ -5,15 +5,24 @@ email: team@fightforthefuture.org
 pressEmail: press@fightforthefuture.org
 pressPhone: +1 (508) 368-3026
 copyright: A project of Fight for the Future. No copyright intended.
-privacy: >
-    We will deliver your signatures and stories to lawmakers, and  display your stories on this
-    site. Stories may be shared by visitors to the site over social media.  We will not share
-    your data with anyone else or contact you for any reason besides future campaigns.
+# join cta
+joinCTAURL: immigrantswelcome.net@gmail.com
+#disclaimers
+signupDisclaimer: >
+    We will deliver your signatures to lawmakers, we will not share your data with anyone else or
+    contact you for any reason besides future campaigns.
+storyDisclaimer: >
+    We will deliver your signatures and stories to lawmakers, and display your stories on this
+    site. Stories may be shared by visitors to the site over social media. We will not share your
+    data with anyone else or contact you for any reason besides future campaigns.
+# footer links
 donateUrl: https://donate.fightforthefuture.org/
 facebookPage: https://www.facebook.com/fightfortheftr/
 # modals
-thanksTitle: Thanks for adding your voice to defend immigrants.
-thanksText: Share this page with your friends and family to spread the word.
+thanksSignupTitle: Thanks for adding your voice to defend immigrants.
+thanksSignupText: Share this page with your friends and family to spread the word.
+thanksStoryTitle: Thanks for adding your voice to defend immigrants.
+thanksStoryText: Share this page with your friends and family to spread the word.
 thanksFBButton: share on facebook
 thanksTWButton: share on twitter
 thanksStoryButton: add your story
@@ -21,11 +30,32 @@ storyTitle: Add your story
 storySubmit: add your story
 signupTitle: Join the campaign
 signupSubmit: join the campaign
+# form placeholders
+signupPlaceholderFirstName: First name
+signupPlaceholderLastName: Last name
+signupPlaceholderEmail: Email
+signupPlaceholderZip: Zip code
+storyPlaceholderFirstName: First name
+storyPlaceholderLastName: Last name
+storyPlaceholderEmail: Email address
+storyPlaceholderZip: Zip code
+storyPlaceholderYear: Year of immigration
+storyPlaceholderOrigin: Where did you or your family immigrate from?
+storyPlaceholderWhy: >
+    Tell us the story of why you or your family immigrated to the United States? Consider
+    starting with “I came to the United States…” or “My family came to the United States…”
+storyPlaceholderPhoto: >
+    Add a link to a photo of you or members of your family who immigrated—consider imgur.com to
+    host your image.
 # story page buttons
 storyPageStoryButton: add your story
 storyPageCampaignButton: join the campaign
+# banner
+bannerHeadline: Immigration is America
+bannerSubHeadline: On DATE, tell your immigration story.
+bannerButton: add your story
 # API
-signupIdentifier: 0
-storyIdenfifier: 0
+signupIdentifier: a43b0829-911a-4b92-b202-066e22757394
+storyIdenfifier: 219b17bd-1746-4bc1-ab28-8632af8ceabf
 # dev
 DEBUG: false
