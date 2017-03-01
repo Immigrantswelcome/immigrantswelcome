@@ -10,11 +10,11 @@
 
     <link href="{% static 'images/favicon.png' %}" rel="icon" type="image/x-icon" />
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i,500,700,700i,900" rel="stylesheet">
-    {% compress 'style.css' %}
+    {% block css -%}
+    {% compress 'style.css' -%}
         <link rel="stylesheet" type="text/css" href="/static/vendor/normalize.css/normalize.css" />
         <link rel="stylesheet" type="text/css" href="/static/vendor/slick-carousel/slick/slick.css" />
-
-        {% autoprefix %}
+        {% autoprefix -%}
             <link rel="stylesheet" type="text/css" href="/static/css/main.css" />
             <link rel="stylesheet" type="text/css" href="/static/css/richtext.css" />
             <link rel="stylesheet" type="text/css" href="/static/css/util.css" />
@@ -26,14 +26,13 @@
 
             <link rel="stylesheet" type="text/css" href="/static/css/general/home.css" />
             <link rel="stylesheet" type="text/css" href="/static/css/story/detail.css" />
-        {% endautoprefix %}
-    {% endcompress %}
-    {% block css %}{% endblock %}
-
-    {% block head %}{% endblock %}
+        {%- endautoprefix %}
+    {%- endcompress %}
+    {%- endblock %}
 </head>
 <body class="{% block body_class %}{% endblock %}">
     <div class="page-wrapper">
+        {% block page_header -%}
         <div class="page-header">
             <div class="page-width">
                 <div class="page-width-inner">
@@ -43,11 +42,13 @@
                 </div>
             </div>
         </div>
+        {%- endblock %}
 
         <div class="page-content">
-            {% block content %}{% endblock %}
+            {%- block content -%}{%- endblock -%}
         </div>
 
+        {% block page_footer -%}
         <div class="page-footer">
             <div class="page-width">
                 <div class="page-width-inner">
@@ -64,16 +65,18 @@
                 </div>
             </div>
         </div>
+        {%- endblock %}
 
-        {% block overlays %}
+        {% block overlays -%}
         <div id="overlay" class="overlay">
             <svg class="overlay__close" width="14" height="14">
                 <use xlink:href="{% static 'icon_sprite/sprite.svg' %}#close"></use>
             </svg>
             <div class="overlay__story">
                 <div class="overlay__title">{{ config.storyTitle }}</div>
-                {% spaceless %}
+                {% spaceless -%}
                 <form class="overlay__story__form" action="https://actionnetwork.org/api/v2/forms/{{ config.storyIdenfifier }}/submissions" method="post">
+                    <div class="overlay__story__form__error form__general-error">Something went wrong!<br>Please try again in a few minutes.</div>
                     <div class="overlay__story__form__group overlay__story__form__group--one-half">
                         <input id="id_name" class="input--bordered input--full-width" name="given_name" type="text" placeholder="{{ config.storyPlaceholderFirstName }}" required="required" />
                     </div>
@@ -102,13 +105,13 @@
                         <button type="submit" class="button--full-width">{{ config.storySubmit }}</button>
                     </div>
                 </form>
-                {% endspaceless %}
+                {%- endspaceless %}
                 <div class="overlay__story__disclaimer">{{ config.storyDisclaimer }}</div>
             </div>
             <div class="overlay__thanks overlay__thanks--signup">
                 <div class="overlay__title">{{ config.thanksSignupTitle }}</div>
                 <div class="overlay__text">{{ config.thanksSignupText }}</div>
-                {% spaceless %}
+                {% spaceless -%}
                 <div class="overlay__thanks__buttons">
                     <a class="overlay__thanks__buttons__button button button--fb" href="#" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u={{ page.url() | build_absolute_uri | urlencode }}','facebook-share-dialog','width=626,height=436');return false;">
                         <svg class="overlay__thanks__buttons__button__icon" width="16" height="16">
@@ -123,13 +126,13 @@
                         {{ config.thanksTWButton }}
                     </a>
                 </div>
-                {% endspaceless %}
+                {%- endspaceless %}
                 <button class="overlay__thanks__story button--gray button--full-width">{{ config.thanksStoryButton }}</button>
             </div>
             <div class="overlay__thanks overlay__thanks--story">
                 <div class="overlay__title">{{ config.thanksStoryTitle }}</div>
                 <div class="overlay__text">{{ config.thanksStoryText }}</div>
-                {% spaceless %}
+                {% spaceless -%}
                 <div class="overlay__thanks__buttons">
                     <a class="overlay__thanks__buttons__button button button--fb" href="#" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u={{ page.url() | build_absolute_uri | urlencode }}','facebook-share-dialog','width=626,height=436');return false;">
                         <svg class="overlay__thanks__buttons__button__icon" width="16" height="16">
@@ -144,21 +147,24 @@
                         {{ config.thanksTWButton }}
                     </a>
                 </div>
-                {% endspaceless %}
+                {%- endspaceless %}
             </div>
         </div>
         <div id="overlay_trigger" rel="#overlay"></div>
-        {% endblock %}
+        {%- endblock %}
     </div>
 
+    {% block jquery -%}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script>
         if (typeof jQuery == 'undefined') {
             document.write('\x3Cscript src="{% static 'vendor/jquery/dist/jquery.min.js' %}">\x3C/script>');
         }
     </script>
+    {%- endblock %}
 
-    {% compress 'script.js' %}
+    {% block js -%}
+    {% compress 'script.js' -%}
         <script src="/static/vendor/svg4everybody/dist/svg4everybody.min.js"></script>
         <script src="/static/vendor/slick-carousel/slick/slick.min.js"></script>
         <script src="/static/vendor/autosize/dist/autosize.min.js"></script>
@@ -170,9 +176,9 @@
         <script src="/static/js/lonely/responsive_text/responsive_text.js"></script>
 
         <script src="/static/js/main.js"></script>
-    {% endcompress %}
-    {% block js %}{% endblock %}
+    {%- endcompress %}
 
     <script>svg4everybody();</script>
+    {%- endblock %}
 </body>
 </html>

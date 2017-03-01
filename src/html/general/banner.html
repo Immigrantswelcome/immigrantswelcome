@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block no_meta_title %}{% endblock %}
+
+
+{% block css -%}
+    {% compress 'banner.css' -%}
+        <link rel="stylesheet" type="text/css" href="/static/vendor/normalize.css/normalize.css" />
+        {% autoprefix -%}
+            <link rel="stylesheet" type="text/css" href="/static/css/form.css" />
+            <link rel="stylesheet" type="text/css" href="/static/css/util.css" />
+            <link rel="stylesheet" type="text/css" href="/static/css/general/banner.css" />
+        {%- endautoprefix %}
+    {%- endcompress %}
+{%- endblock %}
+
+{% block body_class %}banner-page{% endblock %}
+
+{% block page_header %}{% endblock %}
+
+{% block content %}
+    <div class="page-width">
+        <div class="page-width-inner">
+            <div class="banner">
+                <div class="banner__image">
+                    <img src="{% static 'images/lady-liberty.png' %}" />
+                </div>
+                <div class="banner__text">
+                    <div class="banner__headline">{{ config.bannerHeadline }}</div>
+                    <div class="banner__subheadline">{{ config.bannerSubHeadline }}</div>
+                </div>
+                <div class="banner__spacer"></div>
+                <a class="banner__link button" href="{{ '/' | build_absolute_uri }}" target="_blank">{{ config.bannerButton }}</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block page_footer %}{% endblock %}
+
+{% block overlays %}{% endblock %}
+{% block jquery %}{% endblock %}
+{% block js %}{% endblock %}

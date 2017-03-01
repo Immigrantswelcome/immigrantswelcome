@@ -50,6 +50,10 @@ storyPlaceholderPhoto: >
 # story page buttons
 storyPageStoryButton: add your story
 storyPageCampaignButton: join the campaign
+# banner
+bannerHeadline: Immigration is America
+bannerSubHeadline: On DATE, tell your immigration story.
+bannerButton: add your story
 # API
 signupIdentifier: a43b0829-911a-4b92-b202-066e22757394
 storyIdenfifier: 219b17bd-1746-4bc1-ab28-8632af8ceabf

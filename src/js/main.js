@@ -125,6 +125,7 @@
         });
     }
 
+
     function overlaysInit() {
         var $overlay = $('#overlay');
 
@@ -183,6 +184,7 @@
         var storyForm = $('.overlay__story__form').eq(0);
 
         storyForm.parsley().on('form:success', function() {
+            storyForm.find('.form__general-error').removeClass('form__general-error--show');
             storyForm.osdi({
                 immediate: true,
                 done: function(data, textStatus, jqXHR) {
@@ -193,7 +195,7 @@
                     addStoryDone();
                 },
                 fail: function(jqXHR, textStatus, errorThrown) {
-                    //TODO: console.log('fail');
+                    storyForm.find('.form__general-error').addClass('form__general-error--show');
                 }
             });
         }).on('form:submit', function() {
@@ -204,6 +206,7 @@
             var signUpForm = $('.signup__form').eq(0);
 
             signUpForm.parsley().on('form:success', function() {
+                signUpForm.find('.form__general-error').removeClass('form__general-error--show');
                 signUpForm.osdi({
                     immediate: true,
                     done: function(data, textStatus, jqXHR) {
@@ -215,7 +218,7 @@
                         $overlayTrigger.click();
                     },
                     fail: function(jqXHR, textStatus, errorThrown) {
-                        //TODO: console.log('fail');
+                        signUpForm.find('.form__general-error').addClass('form__general-error--show');
                     }
                 });
             }).on('form:submit', function() {

@@ -482,6 +482,12 @@ body.home-page .page-content {
         width: 100%;
     }
 
+    body.home-page .actions__banner iframe {
+        border: none;
+        height: 100px;
+        width: 100%;
+    }
+
     body.home-page .actions__help {
         color: rgba(255,255,255,0.70);
         font-size: 14px;
