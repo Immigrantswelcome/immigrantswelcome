@@ -75,7 +75,7 @@
                     {% spaceless %}
                     <div class="story__main__actions">
                         <button class="story__main__actions__action">{{ config.storyPageStoryButton }}</button>
-                        <button class="story__main__actions__action button--reverse">{{ config.storyPageCampaignButton }}</button>
+                        {{ config.joinCTAURL | obfuscate_email(config.storyPageCampaignButton, "story__main__actions__action button button--reverse") }}
                     </div>
                     {% endspaceless %}
                 </div>

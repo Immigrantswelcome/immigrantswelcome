@@ -1,4 +1,4 @@
-input {
+input, .input {
     background: #FFF;
     border: none;
     border-radius: 4px;
@@ -7,17 +7,56 @@ input {
     line-height: 24px;
 }
 
+.input--bordered {
+    border: 1px solid #D8D8D8;
+}
+
+.input--full-width {
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.input--tall {
+    min-height: 288px;
+}
+
+input.parsley-success,
+select.parsley-success,
+textarea.parsley-success {
+    color: #468847;
+    background-color: #DFF0D8;
+}
+
+input.parsley-error,
+select.parsley-error,
+textarea.parsley-error {
+    color: #B94A48;
+    background-color: #F2DEDE;
+}
+
+.parsley-errors-list {
+    color: #F30000;
+    max-width: 217px;
+}
+
+.parsley-errors-list.filled {
+    padding: 10px 0;
+}
+
 button,
 .button {
     background: #248DDD;
+    border-radius: 4px;
+    border: none;
+    box-sizing: border-box;
     color: #FFF;
     cursor: pointer;
-    border: none;
-    border-radius: 4px;
+    display: inline-block;
     font-family: "Roboto", sans-serif;
     font-size: 14px;
     font-weight: 500;
     padding: 16px 45px;
+    text-align: center;
     text-transform: uppercase;
     transition: background 0.3s;
 }
@@ -61,4 +100,8 @@ button:hover,
 
 .button--tw:hover {
     background: #0083B5;
+}
+
+.button--full-width {
+    width: 100%;
 }

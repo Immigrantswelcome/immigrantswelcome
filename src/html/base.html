@@ -59,7 +59,6 @@
                             <div class="footer__press__phone"><a href="tel:{{ config.pressPhone }}">{{ config.pressPhone }}</a></div>
                         </div>
                         <div class="footer__copyright">{{ config.copyright }}</div>
-                        <div class="footer__privacy">{{ config.privacy }}</div>
                         <div class="footer__links"><a class="footer__links__link" href="{{ config.donateUrl }}">Donate</a>|{{ config.email | obfuscate_email("Email", "footer__links__link") }}</div>
                     </div>
                 </div>
@@ -71,62 +70,45 @@
             <svg class="overlay__close" width="14" height="14">
                 <use xlink:href="{% static 'icon_sprite/sprite.svg' %}#close"></use>
             </svg>
-
             <div class="overlay__story">
                 <div class="overlay__title">{{ config.storyTitle }}</div>
-                <form class="overlay__story__form" action="https://actionnetwork.org/api/v2/forms/{{ config.signupIdentifier }}/submissions" method="post">
-                    <div class="overlay__story__form__group">
-                        <input id="id_name" name="given_name" type="text" placeholder="{{ config.storyPlaceholderFirstName }}" />
+                {% spaceless %}
+                <form class="overlay__story__form" action="https://actionnetwork.org/api/v2/forms/{{ config.storyIdenfifier }}/submissions" method="post">
+                    <div class="overlay__story__form__group overlay__story__form__group--one-half">
+                        <input id="id_name" class="input--bordered input--full-width" name="given_name" type="text" placeholder="{{ config.storyPlaceholderFirstName }}" required="required" />
+                    </div>
+                    <div class="overlay__story__form__group overlay__story__form__group--one-half">
+                        <input id="id_name" class="input--bordered input--full-width" name="family_name" type="text" placeholder="{{ config.storyPlaceholderLastName }}" required="required" />
+                    </div>
+                    <div class="overlay__story__form__group overlay__story__form__group--two-third">
+                        <input id="id_email" class="input--bordered input--full-width" name="email_address" type="email" placeholder="{{ config.storyPlaceholderEmail }}" required="required" />
+                    </div>
+                    <div class="overlay__story__form__group overlay__story__form__group--one-third">
+                        <input id="id_zipcode" class="input--bordered input--full-width" name="postal_code" type="text" placeholder="{{ config.storyPlaceholderZip }}" required="required" minlength="5" data-parsley-type="digits" />
                     </div>
                     <div class="overlay__story__form__group">
-                        <input id="id_name" name="family_name" type="text" placeholder="{{ config.storyPlaceholderLastName }}" />
+                        <input id="id_imigrate" class="input--bordered input--full-width" name="custom[Year]" type="text" placeholder="{{ config.storyPlaceholderYear }}" required="required" minlength="4" maxlength="4" data-parsley-type="digits" />
                     </div>
                     <div class="overlay__story__form__group">
-                        <input id="id_email" name="email_address" type="text" placeholder="{{ config.storyPlaceholderEmail }}" />
+                        <input id="id_from" class="input--bordered input--full-width" name="custom[Origin]" type="text" placeholder="{{ config.storyPlaceholderOrigin }}" required="required" />
                     </div>
                     <div class="overlay__story__form__group">
-                        <input id="id_zipcode" name="postal_code" type="text" placeholder="{{ config.storyPlaceholderZip }}" />
+                        <textarea id="id_from" class="input input--bordered input--full-width input--tall" name="custom[Why]" type="text" placeholder="{{ config.storyPlaceholderWhy }}" required="required"></textarea>
                     </div>
                     <div class="overlay__story__form__group">
-                        <input id="id_imigrate" name="custom[Year]" type="text" placeholder="{{ config.storyPlaceholderYear }}" />
+                        <textarea id="id_from" class="input input--bordered input--full-width" name="custom[Photo]" type="url" placeholder="{{ config.storyPlaceholderPhoto }}" required="required"></textarea>
                     </div>
                     <div class="overlay__story__form__group">
-                        <input id="id_from" name="custom[Origin]" type="text" placeholder="{{ config.storyPlaceholderOrigin }}" />
-                    </div>
-                    <div class="overlay__story__form__group">
-                        <textarea id="id_from" name="custom[Why]" type="text" placeholder="{{ config.storyPlaceholderWhy }}"></textarea>
-                    </div>
-                    <div class="overlay__story__form__group">
-                        <textarea id="id_from" name="custom[Photo]" type="text" placeholder="{{ config.storyPlaceholderPhoto }}"></textarea>
-                    </div>
-                    <div class="overlay__story__form__group">
-                        <button>{{ config.storySubmit }}</button>
+                        <button type="submit" class="button--full-width">{{ config.storySubmit }}</button>
                     </div>
                 </form>
+                {% endspaceless %}
+                <div class="overlay__story__disclaimer">{{ config.storyDisclaimer }}</div>
             </div>
-            <div class="overlay__campaign">
-                <div class="overlay__title">{{ config.signupTitle }}</div>
-                <form class="overlay__campaign__form" action="https://actionnetwork.org/api/v2/forms/{{ config.signupIdentifier }}" method="post">
-                    <div class="overlay__campaign__form__group">
-                        <input id="id_name" name="given_name" type="text" placeholder="First name" />
-                    </div>
-                    <div class="overlay__campaign__form__group">
-                        <input id="id_name" name="family_name" type="text" placeholder="Last name" />
-                    </div>
-                    <div class="overlay__campaign__form__group">
-                        <input id="id_email" name="email_address" type="text" placeholder="Email" />
-                    </div>
-                    <div class="overlay__campaign__form__group">
-                        <input id="id_zipcode" name="postal_code" type="text" placeholder="Zip code" />
-                    </div>
-                    <div class="overlay__campaign__form__group">
-                        <button>{{ page.signupSubmit }}</button>
-                    </div>
-                </form>
-            </div>
-            <div class="overlay__thanks">
-                <div class="overlay__title">{{ config.thanksTitle }}</div>
-                <div class="overlay__text">{{ config.thanksText }}</div>
+            <div class="overlay__thanks overlay__thanks--signup">
+                <div class="overlay__title">{{ config.thanksSignupTitle }}</div>
+                <div class="overlay__text">{{ config.thanksSignupText }}</div>
+                {% spaceless %}
                 <div class="overlay__thanks__buttons">
                     <a class="overlay__thanks__buttons__button button button--fb" href="#" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u={{ page.url() | build_absolute_uri | urlencode }}','facebook-share-dialog','width=626,height=436');return false;">
                         <svg class="overlay__thanks__buttons__button__icon" width="16" height="16">
@@ -141,7 +123,28 @@
                         {{ config.thanksTWButton }}
                     </a>
                 </div>
-                <button class="overlay__thanks__story button--gray">{{ config.thanksStoryButton }}</button>
+                {% endspaceless %}
+                <button class="overlay__thanks__story button--gray button--full-width">{{ config.thanksStoryButton }}</button>
+            </div>
+            <div class="overlay__thanks overlay__thanks--story">
+                <div class="overlay__title">{{ config.thanksStoryTitle }}</div>
+                <div class="overlay__text">{{ config.thanksStoryText }}</div>
+                {% spaceless %}
+                <div class="overlay__thanks__buttons">
+                    <a class="overlay__thanks__buttons__button button button--fb" href="#" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u={{ page.url() | build_absolute_uri | urlencode }}','facebook-share-dialog','width=626,height=436');return false;">
+                        <svg class="overlay__thanks__buttons__button__icon" width="16" height="16">
+                            <use xlink:href="{% static 'icon_sprite/sprite.svg' %}#facebook-large"></use>
+                        </svg>
+                        {{ config.thanksFBButton }}
+                    </a>
+                    <a class="overlay__thanks__buttons__button button button--tw" href="#" onclick="window.open('https://twitter.com/intent/tweet?status={{ page.title | urlencode }}+{{ page.url() | build_absolute_uri | urlencode }}','twitter-share-dialog','width=626,height=436');return false;">
+                        <svg class="overlay__thanks__buttons__button__icon" width="16" height="16">
+                            <use xlink:href="{% static 'icon_sprite/sprite.svg' %}#twitter-large"></use>
+                        </svg>
+                        {{ config.thanksTWButton }}
+                    </a>
+                </div>
+                {% endspaceless %}
             </div>
         </div>
         <div id="overlay_trigger" rel="#overlay"></div>
@@ -160,6 +163,7 @@
         <script src="/static/vendor/slick-carousel/slick/slick.min.js"></script>
         <script src="/static/vendor/autosize/dist/autosize.min.js"></script>
         <script src="/static/vendor/jquery-osdi/jquery.osdi.min.js"></script>
+        <script src="/static/vendor/parsleyjs/dist/parsley.min.js"></script>
 
         <script src="/static/js/jquery.tools.min.js"></script>
         <script src="/static/js/lonely/scroll_reveal/scroll_reveal.js"></script>

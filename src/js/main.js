@@ -4,6 +4,7 @@
 
     homePageInit();
     storyPageInit();
+    overlaysInit();
 
     function homePageInit() {
         if (! document.querySelector('body').classList.contains('home-page')) {
@@ -36,31 +37,6 @@
             minSize: 42,
             maxSize: 56,
             attribute: 'line-height'
-        });
-
-        var $overlay = $('#overlay');
-
-        var $overlayTrigger = $('#overlay_trigger');
-        $overlayTrigger.overlay({
-            close: '.overlay__close',
-            mask: {
-                color: '#000',
-                opacity: 0.4
-            },
-            onClose: function() {
-                signupThanks.classList.remove('overlay__thanks--show');
-            }
-        });
-        var signupThanks = document.querySelector('.overlay__thanks');
-
-        $('.signup__form').osdi({
-            done: function(data, textStatus, jqXHR) {
-                signupThanks.classList.add('overlay__thanks--show');
-                $overlayTrigger.click();
-            },
-            fail: function(jqXHR, textStatus, errorThrown) {
-                //TODO: console.log('fail');
-            }
         });
 
         var grid = document.querySelector('.logos__grid');
@@ -110,7 +86,7 @@
 
         var $slides = $('.stories__slides');
 
-        if ($slides.length > 1) {
+        if ($slides.children().length > 1) {
             $slides.on('init', function(slick) {
                 var slides = this.querySelectorAll('.stories__slides__slide');
                 slides.forEach(function(slide) {
@@ -147,5 +123,120 @@
             maxSize: 56,
             attribute: 'line-height'
         });
+    }
+
+    function overlaysInit() {
+        var $overlay = $('#overlay');
+
+        var $overlayTrigger = $('#overlay_trigger');
+        $overlayTrigger.overlay({
+            close: '.overlay__close',
+            mask: {
+                color: '#000',
+                opacity: 0.4
+            },
+            onClose: function() {
+                signupThanks.classList.remove('overlay__thanks--show');
+                signupStory.classList.remove('overlay__story--show');
+            }
+        });
+        var signupStory = document.querySelector('.overlay__story');
+        var signupThanks = document.querySelector('.overlay__thanks--signup');
+        var storyThanks = document.querySelector('.overlay__thanks--story');
+
+        var storyDialogButton = document.querySelector('.overlay__thanks__story');
+
+        storyDialogButton.addEventListener('click', function() {
+            var addStoryEvent = function() {
+                signupThanks.removeEventListener('transitionend', addStoryEvent);
+                signupThanks.classList.remove('overlay__thanks--show');
+                signupThanks.classList.remove('overlay__thanks--hide');
+
+                signupStory.classList.add('overlay__story--hide');
+                signupStory.classList.add('overlay__story--show');
+                setTimeout(function() {
+                    signupStory.classList.remove('overlay__story--hide');
+                }, 0);
+            };
+
+            signupThanks.addEventListener('transitionend', addStoryEvent);
+            signupThanks.classList.add('overlay__thanks--hide');
+        });
+
+        function addStoryDone() {
+            var doneStoryEvent = function() {
+                signupStory.removeEventListener('transitionend', doneStoryEvent);
+                signupStory.classList.remove('overlay__story--show');
+                signupStory.classList.remove('overlay__story--hide');
+
+                storyThanks.classList.add('overlay__thanks--hide');
+                storyThanks.classList.add('overlay__thanks--show');
+                setTimeout(function() {
+                    storyThanks.classList.remove('overlay__thanks--hide');
+                }, 0);
+            };
+
+            signupStory.addEventListener('transitionend', doneStoryEvent);
+            signupStory.classList.add('overlay__story--hide');
+        }
+
+        var storyForm = $('.overlay__story__form').eq(0);
+
+        storyForm.parsley().on('form:success', function() {
+            storyForm.osdi({
+                immediate: true,
+                done: function(data, textStatus, jqXHR) {
+                    var inputs = storyForm.get(0).querySelectorAll('input');
+                    for (var i = 0, l = inputs.length; i < l; ++i) {
+                        inputs[i].value = '';
+                    }
+                    addStoryDone();
+                },
+                fail: function(jqXHR, textStatus, errorThrown) {
+                    //TODO: console.log('fail');
+                }
+            });
+        }).on('form:submit', function() {
+            return false;
+        });
+
+        if (document.querySelector('body').classList.contains('home-page')) {
+            var signUpForm = $('.signup__form').eq(0);
+
+            signUpForm.parsley().on('form:success', function() {
+                signUpForm.osdi({
+                    immediate: true,
+                    done: function(data, textStatus, jqXHR) {
+                        var inputs = signUpForm.get(0).querySelectorAll('input');
+                        for (var i = 0, l = inputs.length; i < l; ++i) {
+                            inputs[i].value = '';
+                        }
+                        signupThanks.classList.add('overlay__thanks--show');
+                        $overlayTrigger.click();
+                    },
+                    fail: function(jqXHR, textStatus, errorThrown) {
+                        //TODO: console.log('fail');
+                    }
+                });
+            }).on('form:submit', function() {
+                return false;
+            });
+
+            var addStoryButton = document.querySelector('button.stories__cta');
+
+            addStoryButton.addEventListener('click', function() {
+                signupStory.classList.add('overlay__story--show');
+                $overlayTrigger.click();
+            });
+        }
+
+        if (document.querySelector('body').classList.contains('story-page')) {
+            var addStoryButton = document.querySelector('button.story__main__actions__action');
+
+            addStoryButton.addEventListener('click', function() {
+                signupStory.classList.add('overlay__story--show');
+                $overlayTrigger.click();
+            });
+        }
     }
 })();

@@ -5,15 +5,24 @@ email: team@fightforthefuture.org
 pressEmail: press@fightforthefuture.org
 pressPhone: +1 (508) 368-3026
 copyright: A project of Fight for the Future. No copyright intended.
-privacy: >
-    We will deliver your signatures and stories to lawmakers, and  display your stories on this
-    site. Stories may be shared by visitors to the site over social media.  We will not share
-    your data with anyone else or contact you for any reason besides future campaigns.
+# join cta
+joinCTAURL: immigrantswelcome.net@gmail.com
+#disclaimers
+signupDisclaimer: >
+    We will deliver your signatures to lawmakers, we will not share your data with anyone else or
+    contact you for any reason besides future campaigns.
+storyDisclaimer: >
+    We will deliver your signatures and stories to lawmakers, and display your stories on this
+    site. Stories may be shared by visitors to the site over social media. We will not share your
+    data with anyone else or contact you for any reason besides future campaigns.
+# footer links
 donateUrl: https://donate.fightforthefuture.org/
 facebookPage: https://www.facebook.com/fightfortheftr/
 # modals
-thanksTitle: Thanks for adding your voice to defend immigrants.
-thanksText: Share this page with your friends and family to spread the word.
+thanksSignupTitle: Thanks for adding your voice to defend immigrants.
+thanksSignupText: Share this page with your friends and family to spread the word.
+thanksStoryTitle: Thanks for adding your voice to defend immigrants.
+thanksStoryText: Share this page with your friends and family to spread the word.
 thanksFBButton: share on facebook
 thanksTWButton: share on twitter
 thanksStoryButton: add your story
