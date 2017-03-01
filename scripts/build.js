@@ -662,9 +662,13 @@ promises.push(globby(imagePaths).then(paths => {
     });
 }));
 
+// favicon stuff
 promises.push(fs.copySync(
     path.join(SRC, 'images', 'favicons', 'favicon.ico'),
     path.join(DIST, 'favicon.ico'), {preserveTimestamps:true}))
+promises.push(fs.copySync(
+    path.join(SRC, 'images', 'favicons', 'browserconfig.xml'),
+    path.join(DIST, 'browserconfig.xml'), {preserveTimestamps:true}))
 
 // clean thumbnails
 promises.push(globby(path.join(THUMBS_DEST_PATH, '*')).then(paths => {
