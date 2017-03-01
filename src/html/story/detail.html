@@ -10,7 +10,7 @@
 {% set abs_url = url | build_absolute_uri %}
 {% set abs_urlencode = abs_url | urlencode %}
 
-{% block head %}
+{% block head -%}
     <meta property="og:title" content="{{ page.title }}" />
     <meta property="og:description" content="{{ page.text | strip_marked | truncate(255) }}" />
     <meta property="og:url" content="{{ abs_url }}" />
@@ -22,7 +22,7 @@
     <meta property="og:type" content="article" />
     <meta property="article:publisher" content="{{ config.facebookPage }}" />
     <meta property="article:section" content="Immigration Stories" />
-{% endblock %}
+{%- endblock %}
 
 {% block body_class %}story-page{% endblock %}
 
