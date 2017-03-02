@@ -16,6 +16,13 @@ fi
 
 echo "This commit is eligible for deployment setup."
 
+echo "Reset mtimes in src for cache busting consistency"
+for FILE in $(git ls-files)
+do
+    unix_timestamp=$(git log -n 1 --pretty=format:%cd --date=iso -- $FILE | sed 's/-//g;s/ //;s/://;s/:/\./;s/ .*//')
+    touch -mt $unix_timestamp $FILE
+done
+
 echo "git checkout master to dist"
 git clone -b master --single-branch "https://$GH_TOKEN@github.com/immigrantswelcome/immigrantswelcome.github.io.git" dist
 
@@ -25,7 +32,7 @@ node ./scripts/setup.js
 echo "Enter dist"
 cd dist
 
-echo "Reset mtimes for cache busting consistency"
+echo "Reset mtimes in dist for cache busting consistency"
 for FILE in $(git ls-files)
 do
     unix_timestamp=$(git log -n 1 --pretty=format:%cd --date=iso -- $FILE | sed 's/-//g;s/ //;s/://;s/:/\./;s/ .*//')

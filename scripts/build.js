@@ -352,9 +352,9 @@ env.addFilter('thumbnail', (imageUrl, size, kwargs) => {
     var width = parseInt(sizes[0]) || null;
     var height = parseInt(sizes[1]) || null;
 
-    var filePath = path.join(STATIC_ROOT, imageUrl);
+    var filePath = path.join(SRC, imageUrl);
     var originalTimestamp = fs.lstatSync(filePath).mtime;
-    var hash = md5(`${imageUrl}:${originalTimestamp}:${size}`);
+    var hash = md5(`${imageUrl}:${originalTimestamp}:${size}:${area}:${embedColor}`);
     var name = `${hash}${path.extname(imageUrl)}`;
     var savePath = path.join(THUMBS_DEST_PATH, name);
     var date = null;
