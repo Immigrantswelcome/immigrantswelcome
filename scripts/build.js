@@ -15,7 +15,6 @@ const nunjucks = require('nunjucks');
 const postcss = require('postcss');
 const sharp = require('sharp');
 const uglifyJS = require('uglify-js');
-const uuidV4 = require('uuid/v4');
 const yaml = require('js-yaml');
 
 var promises = [];
@@ -319,7 +318,7 @@ env.addFilter('possessive', str => {
 
 var THUMBS = new Set();
 
-var Thumbnail = (function() {
+var Thumbnail = (() => {
     function Thumbnail(url, format, height, width) {
         this.url = url;
         this.format = format;
@@ -435,6 +434,7 @@ var ObfuscateEmail = (() => {
         Given a string representing an email address,
         returns a mailto link with rot13 JavaScript obfuscation.
     */
+    var generation = 0;
     var replace = /@|\./gm;
     var replaceDict = {'@': '\\100', '.': '\\056'};
     var ROT13 = s => s.replace(
@@ -472,7 +472,7 @@ var ObfuscateEmail = (() => {
         }
 
         return {
-            'anchor_id': uuidV4(),
+            'anchor_id': md5(generation++),
             'css_class': this.css_class,
             'email': this.email,
             'script_set_text': script_set_text
