@@ -44,7 +44,7 @@
                             <a href="{{ story.url() }}">
                                 <div class="stories__slides__slide__tease">“{{ story.text | strip_marked | truncate(51) }}”</div>
                                 <div class="stories__slides__slide__image">
-                                    <img class="stories__slides__slide__image__img" src="{{ story.image | thumbnail('1200x540') }}" />
+                                    <img class="stories__slides__slide__image__img" src="{{ story.image | thumbnail('1200x540', embed='#235371') }}" />
                                     <div class="stories__slides__slide__image__gradient"></div>
                                 </div>
                                 <div class="stories__slides__slide__name">

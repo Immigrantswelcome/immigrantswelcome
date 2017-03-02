@@ -340,13 +340,21 @@ var Thumbnail = (function() {
 })();
 
 env.addFilter('thumbnail', (imageUrl, size, kwargs) => {
-    var area = typeof kwargs === 'undefined' ? null : kwargs.area || null;
+    var area = null;
+    var embedColor = null;
+    if (typeof kwargs !== 'undefined') {
+        var area = kwargs.area || null;
+        var embedColor = kwargs.embed || null;
+    }
+
     var sizes = size.split('x');
 
     var width = parseInt(sizes[0]) || null;
     var height = parseInt(sizes[1]) || null;
 
-    var hash = md5(`${imageUrl}:${size}`);
+    var filePath = path.join(STATIC_ROOT, imageUrl);
+    var originalTimestamp = fs.lstatSync(filePath).mtime;
+    var hash = md5(`${imageUrl}:${originalTimestamp}:${size}`);
     var name = `${hash}${path.extname(imageUrl)}`;
     var savePath = path.join(THUMBS_DEST_PATH, name);
     var date = null;
@@ -403,15 +411,16 @@ env.addFilter('thumbnail', (imageUrl, size, kwargs) => {
         }
 
         var thumbnailLoop = false;
-        image.resize(imgWidth, imgHeight)
-            .max()
-            .withoutEnlargement()
-            .toFile(savePath, (err, info) => {
-                thumbnailFormat = info.format;
-                thumbnailHeight = info.height;
-                thumbnailWidth = info.width;
-                thumbnailLoop = true;
-            });
+        var chain = image.resize(imgWidth, imgHeight).max().withoutEnlargement();
+        if (embedColor !== null) {
+            chain = chain.background(embedColor).embed();
+        }
+        chain.toFile(savePath, (err, info) => {
+            thumbnailFormat = info.format;
+            thumbnailHeight = info.height;
+            thumbnailWidth = info.width;
+            thumbnailLoop = true;
+        });
         deasync.loopWhile(() => thumbnailLoop === false);
     }
 
