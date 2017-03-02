@@ -15,7 +15,6 @@ const nunjucks = require('nunjucks');
 const postcss = require('postcss');
 const sharp = require('sharp');
 const uglifyJS = require('uglify-js');
-const uuidV4 = require('uuid/v4');
 const yaml = require('js-yaml');
 
 var promises = [];
@@ -319,19 +318,64 @@ env.addFilter('possessive', str => {
 
 var THUMBS = new Set();
 
+var Thumbnail = (() => {
+    function Thumbnail(url, format, height, width) {
+        this.url = url;
+        this.format = format;
+        this.height = height;
+        this.width = width;
+        this.length = url.length;
+    }
+
+    Thumbnail.prototype.valueOf = function() {
+        return this.url;
+    };
+
+    Thumbnail.prototype.toString = function() {
+        return this.url;
+    };
+
+    return Thumbnail;
+})();
+
 env.addFilter('thumbnail', (imageUrl, size, kwargs) => {
-    var area = typeof kwargs === 'undefined' ? null : kwargs.area || null;
+    var area = null;
+    var embedColor = null;
+    if (typeof kwargs !== 'undefined') {
+        var area = kwargs.area || null;
+        var embedColor = kwargs.embed || null;
+    }
+
     var sizes = size.split('x');
 
     var width = parseInt(sizes[0]) || null;
     var height = parseInt(sizes[1]) || null;
 
-    var hash = md5(`${imageUrl}:${size}`);
+    var filePath = path.join(SRC, imageUrl);
+    var originalTimestamp = fs.lstatSync(filePath).mtime;
+    var hash = md5(`${imageUrl}:${originalTimestamp}:${size}:${area}:${embedColor}`);
     var name = `${hash}${path.extname(imageUrl)}`;
     var savePath = path.join(THUMBS_DEST_PATH, name);
     var date = null;
+
+    var thumbnailFormat = null;
+    var thumbnailHeight = null;
+    var thumbnailWidth = null;
+
     if (fs.existsSync(savePath)) {
         date = fs.lstatSync(savePath).mtime;
+
+        var image = sharp(savePath);
+
+        var metadata = null;
+        image.metadata().then(res => {
+            metadata = res;
+        });
+        deasync.loopWhile(() => metadata === null);
+
+        thumbnailFormat = metadata.format;
+        thumbnailHeight = metadata.height;
+        thumbnailWidth = metadata.width;
     } else {
         date = new Date();
         var imagePath = path.join(SRC, imageUrl);
@@ -365,17 +409,24 @@ env.addFilter('thumbnail', (imageUrl, size, kwargs) => {
             }
         }
 
-        // async is fine here
-        promises.push(image
-            .resize(imgWidth, imgHeight)
-            .max()
-            .withoutEnlargement()
-            .toFile(savePath));
+        var thumbnailLoop = false;
+        var chain = image.resize(imgWidth, imgHeight).max().withoutEnlargement();
+        if (embedColor !== null) {
+            chain = chain.background(embedColor).embed();
+        }
+        chain.toFile(savePath, (err, info) => {
+            thumbnailFormat = info.format;
+            thumbnailHeight = info.height;
+            thumbnailWidth = info.width;
+            thumbnailLoop = true;
+        });
+        deasync.loopWhile(() => thumbnailLoop === false);
     }
 
     THUMBS.add(savePath);
 
-    return `${STATIC_URL}thumbs/${name}?v=${getTimestamp(date)}`;
+    var url = `${STATIC_URL}thumbs/${name}?v=${getTimestamp(date)}`;
+    return new Thumbnail(url, thumbnailFormat, thumbnailHeight, thumbnailWidth);
 });
 
 var ObfuscateEmail = (() => {
@@ -383,6 +434,7 @@ var ObfuscateEmail = (() => {
         Given a string representing an email address,
         returns a mailto link with rot13 JavaScript obfuscation.
     */
+    var generation = 0;
     var replace = /@|\./gm;
     var replaceDict = {'@': '\\100', '.': '\\056'};
     var ROT13 = s => s.replace(
@@ -420,7 +472,7 @@ var ObfuscateEmail = (() => {
         }
 
         return {
-            'anchor_id': uuidV4(),
+            'anchor_id': md5(generation++),
             'css_class': this.css_class,
             'email': this.email,
             'script_set_text': script_set_text
@@ -450,18 +502,8 @@ env.addFilter('lb2pr', str => {
     return new nunjucks.runtime.SafeString(`<p>${str.replace(/(\r\n|\n)+/g, '</p><p>')}</p>`);
 });
 
-env.addFilter('image_metadata', imageUrl => {
-    var imagePath = path.join(SRC, imageUrl);
-    var image = sharp(imagePath);
-    var metadata = null;
-    image.metadata().then(res => {
-        metadata = res;
-    });
-    deasync.loopWhile(() => metadata === null);
-    return metadata;
-});
-// data
 
+// data
 function loadData(model, search="*", url=null) {
     if (search === null) {
         var files = globby.sync(path.join(DB, model, `${model}.yml`));
